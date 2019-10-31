@@ -24,7 +24,7 @@
             android:textSize="24sp" />
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/alam_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -39,6 +39,7 @@
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp">
@@ -48,12 +49,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/goalAddbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_grvity="bottom"
+        android:layout_gravity="bottom"
         android:background="@drawable/button_background"
         android:text="               목표 추가하기               " />
 
