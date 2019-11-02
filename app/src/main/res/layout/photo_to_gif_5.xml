@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,12 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60sp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom">
 
         <ImageButton
             android:id="@+id/download_gif"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50sp"
             android:layout_weight="1"
             android:background="#00FAF8F8"
             android:src="@drawable/ic_file_download_black_24dp"
@@ -32,7 +35,7 @@
         <ImageButton
             android:id="@+id/upload_gif"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50sp"
             android:layout_weight="1"
             android:background="#00FAF8F8"
             android:src="@drawable/ic_file_upload_black_24dp"
@@ -41,11 +44,11 @@
         <ImageButton
             android:id="@+id/back_gif"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50sp"
             android:layout_weight="1"
             android:background="#00FAF8F8"
             android:src="@drawable/ic_keyboard_backspace_black_24dp"
             android:text="Button" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
