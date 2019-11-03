@@ -49,7 +49,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="18dp"
-        android:text="뒤로"
+        android:text="뒤로가기"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
