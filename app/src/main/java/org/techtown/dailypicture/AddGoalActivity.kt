@@ -11,6 +11,14 @@ class AddGoalActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_goal_2)
 
+        //뒤로가기 버튼
+        goal_back.setOnClickListener {
+            var intent= Intent(this,MainActivity::class.java)
+            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            this.finish()
+        }
+
+        //목표 등록 확인 버튼
         button_add.setOnClickListener {
             var intent= Intent(this,MainActivity::class.java)
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

@@ -21,6 +21,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     private var pictureDatabase:PictureDatabase?=null
     private var pictureList=listOf<Picture>()
     lateinit var mAdapter:DetailAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goal_detail_3)
@@ -57,7 +58,13 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             var intent=Intent(this,GifActivitiy::class.java)
             startActivityForResult(intent,3)
         }
+        //뒤로가기 버튼
+        back_goal_detail.setOnClickListener{
+            var intent=Intent(this,MainActivity::class.java)
+            startActivityForResult(intent,3)
+        }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==123){

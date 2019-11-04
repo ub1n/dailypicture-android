@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.techtown.dailypicture">
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,11 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddGoalActivity"></activity>
-        <activity android:name=".GoalDetailActivity"/>
-        <activity android:name=".PhotoDetailActivity"/>
-        <activity android:name=".GifActivitiy"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".AddGoalActivity" />
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".GoalDetailActivity" />
+        <activity android:name=".PhotoDetailActivity" />
+        <activity android:name=".GifActivitiy" />
+        <activity android:name=".StartAppActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
