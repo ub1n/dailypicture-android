@@ -10,9 +10,20 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import org.techtown.dailypicture.adapter.MainAdapter
+import org.techtown.dailypicture.testRoom.Goal
+import org.techtown.dailypicture.testRoom.GoalDatabase
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity()  {
+    var goal= Goal()
+    private var goalDatabase:GoalDatabase?=null
+    private var goalList=listOf<Goal>()
+    lateinit var mAdapter:MainAdapter
+
     //권한 요청을 위한 변수
     val multiplePermissionsCode=100
     val requiredPermissions=arrayOf(
@@ -21,17 +32,43 @@ class MainActivity : AppCompatActivity()  {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //목표 사진 보여주기
+        goalDatabase= GoalDatabase.getInstance(this)
+        mAdapter= MainAdapter(goalList,applicationContext)
+        //item 사이에 줄 만들기
+        mainRecyclerView.addItemDecoration(
+            DividerItemDecoration(this,DividerItemDecoration.VERTICAL)
+        )
+        val r= Runnable {
+            try{
+                goalList=goalDatabase?.goalDao?.getGoal()!!
+                mAdapter= MainAdapter(goalList,applicationContext)
+                mAdapter.notifyDataSetChanged()
+
+                mainRecyclerView.adapter=mAdapter
+                mainRecyclerView.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+                mainRecyclerView.setHasFixedSize(true)
+            }catch (e:Exception){
+                Log.d("tag", "Error - $e")
+            }
+        }
+
+        val thread=Thread(r)
+        thread.start()
 
         //카메라, 내장공간 사용 권한
         checkPermissions()
 
+        //목표 추가버튼
         goalAddbutton.setOnClickListener {
             var intent= Intent(this,AddGoalActivity::class.java)
             startActivityForResult(intent,2)
         }
+
+
         textView2.setOnClickListener {
             var intent=Intent(this,GoalDetailActivity::class.java)
             startActivityForResult(intent,2)
