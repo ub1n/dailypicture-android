@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.detail_item_view.view.*
 import kotlinx.android.synthetic.main.goal_item_view.view.*
+import org.techtown.dailypicture.GoalDetailActivity
 import org.techtown.dailypicture.PhotoDetailActivity
 
 import org.techtown.dailypicture.R
@@ -42,8 +44,12 @@ class MainAdapter(private var goalList : List<Goal>, context : Context) : Recycl
                 }
             }
         }
-        holder.itemView.setOnClickListener { view->   //수정에 정보날림
-            var intent=Intent(view.context,PhotoDetailActivity::class.java)
+
+        //각 item에 클릭 이벤트 붙이기
+        holder.itemView.setOnClickListener { view->
+            var intent=Intent(view.context, GoalDetailActivity::class.java)
+            intent.putExtra("goal_name",goalList[position].goal_name)
+            intent.putExtra("goal_id",goalList[position].id)
             view.context.startActivity(intent)
         }
 
