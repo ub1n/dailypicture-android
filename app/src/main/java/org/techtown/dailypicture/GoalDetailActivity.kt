@@ -7,12 +7,12 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_goal_2.*
 import kotlinx.android.synthetic.main.goal_detail_3.*
 import org.techtown.dailypicture.adapter.DetailAdapter
-import org.techtown.dailypicture.testRoom.Picture
-import org.techtown.dailypicture.testRoom.PictureDao
-import org.techtown.dailypicture.testRoom.PictureDatabase
+import org.techtown.dailypicture.adapter.MainAdapter
+import org.techtown.dailypicture.testRoom.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -21,12 +21,19 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     private var pictureDatabase:PictureDatabase?=null
     private var pictureList=listOf<Picture>()
     lateinit var mAdapter:DetailAdapter
+    var goal= Goal()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goal_detail_3)
+
+        //목표 이름 불러오기
+        var goal_name=getIntent().getStringExtra("goal_name")
+        var goal_id=getIntent().getIntExtra("goal_id",0)
+        goalText.setText(goal_name)
         pictureDatabase=PictureDatabase.getInstance(this)
 
+        //이미지 보여주는 recyclerview
         mAdapter= DetailAdapter(pictureList,applicationContext)
         val r = Runnable {   //recyclerview와 android room 결합
             try {
@@ -49,11 +56,12 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
 
 
-
+        //카메라 아이콘 버튼
         cameraButton.setOnClickListener { //임시
             var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(intent,123)
         }
+        //내보내기 버튼
         gifbutton.setOnClickListener {
             var intent=Intent(this,GifActivitiy::class.java)
             startActivityForResult(intent,3)
@@ -63,6 +71,16 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             var intent=Intent(this,MainActivity::class.java)
             startActivityForResult(intent,3)
         }
+        //삭제하기 버튼
+        delete_goal_detail.setOnClickListener {
+            //goal 테이블에서 목표 delete
+            val database: GoalDatabase = GoalDatabase.getInstance(applicationContext)
+            val goalDao: GoalDao =database.goalDao
+            Thread{database.goalDao.delete(goal_id)}.start()
+            var intent=Intent(this,MainActivity::class.java)
+            startActivityForResult(intent,3)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

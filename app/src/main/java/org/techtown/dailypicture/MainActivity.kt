@@ -38,10 +38,12 @@ class MainActivity : AppCompatActivity()  {
         //목표 사진 보여주기
         goalDatabase= GoalDatabase.getInstance(this)
         mAdapter= MainAdapter(goalList,applicationContext)
+
         //item 사이에 줄 만들기
         mainRecyclerView.addItemDecoration(
             DividerItemDecoration(this,DividerItemDecoration.VERTICAL)
         )
+
         val r= Runnable {
             try{
                 goalList=goalDatabase?.goalDao?.getGoal()!!
@@ -68,11 +70,6 @@ class MainActivity : AppCompatActivity()  {
             startActivityForResult(intent,2)
         }
 
-
-        textView2.setOnClickListener {
-            var intent=Intent(this,GoalDetailActivity::class.java)
-            startActivityForResult(intent,2)
-        }
 
         //setting 아이콘 클릭
         main_setting.setOnClickListener {
