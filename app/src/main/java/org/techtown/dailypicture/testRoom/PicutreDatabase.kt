@@ -7,7 +7,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Picture::class], version = 1)
+@Database(entities = [Picture::class], version = 2)
 abstract class PictureDatabase : RoomDatabase() {
 
     abstract val pictureDao: PictureDao
