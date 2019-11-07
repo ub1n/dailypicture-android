@@ -80,7 +80,7 @@ class ReminderWorker(appContext: Context,workerParams: WorkerParameters):Corouti
 
 
             builder=
-                Notification.Builder(applicationContext,channelId).setContentTitle("To Do List").setContentText("알람왔음!").setSmallIcon(R.drawable.notification_icon_background).setContentIntent(pendingIntent).setAutoCancel(true)
+                Notification.Builder(applicationContext,channelId).setContentTitle("Daily Picture").setContentText("아직 오늘의 사진을 안찍으셨다면 사진을 남겨주세요").setSmallIcon(R.drawable.notification_icon_background).setContentIntent(pendingIntent).setAutoCancel(true)
             notificationManager.notify(1234,builder.build())
             Result.success()
         }
