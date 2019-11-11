@@ -106,66 +106,7 @@ class GalleryFragment internal constructor() : Fragment() {
         }
 
     }
-    /*fun imageToBitmap(image:Image): Bitmap {
-        val mYuvMat=imageToMat(image, CvType.CV_8UC1)
-        val bgrMat= Mat(image.width,image.height,CvType.CV_8UC4)
-        Imgproc.cvtColor(mYuvMat,bgrMat,Imgproc.COLOR_YUV2BGR_I420)
-        val rgbaMatOut=Mat()
-        Imgproc.cvtColor(bgrMat,rgbaMatOut,Imgproc.COLOR_RGB2RGBA,0)
 
-        var bitmap=Bitmap.createBitmap(bgrMat.cols(),bgrMat.rows(),Bitmap.Config.ARGB_8888)
-        Utils.matToBitmap(rgbaMatOut,bitmap)
-        val matrix= Matrix()
-        matrix.postRotate(90f)
-        bitmap=Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,true)
-        return bitmap
-    }
-    fun imageToMat(image:Image,type:Int):Mat{
-        var buffer:ByteBuffer
-        var rowStride:Int
-        var pixelStride:Int
-        val width=image.width
-        val height=image.height
-        var offset=0
-
-        val planes=image.planes
-        val data=ByteArray(image.width*image.height*ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888)/8)
-        val rowData=ByteArray(planes[0].rowStride)
-
-        for(i in planes.indices){
-            buffer=planes[i].buffer
-            buffer.rewind()
-            rowStride=planes[i].rowStride
-            pixelStride=planes[i].pixelStride
-            val w=if(i==0) width else width/2
-            val h=if(i==0) height else height/2
-            for (row in 0 until h){
-                val bytesPerPixel=ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888)/8
-                if(pixelStride==bytesPerPixel){
-                    val length=w*bytesPerPixel
-                    buffer.get(data,offset,length)
-
-                    if(h-row !=1){
-                        buffer.position(buffer.position()+rowStride-length)
-                    }
-                    offset+=length
-                }else{
-                    if(h-row==1){
-                        buffer.get(rowData,0,width-pixelStride+1)
-                    }else{
-                        buffer.get(rowData,0,rowStride)
-                    }
-                    for(col in 0 until w){
-                        data[offset++]=rowData[col*pixelStride]
-                    }
-                }
-            }
-
-        }
-        val mat=Mat(height+height/2,width,type)
-        mat.put(0,0,data)
-        return mat
-    }*/
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -183,42 +124,20 @@ class GalleryFragment internal constructor() : Fragment() {
         imageView2.setImageBitmap(bmp)
 
 
-        //  imageView2.setImageBitmap(bmp)
-        //val bmp:Bitmap= Images.Media.Bitmap(activity?.contentResolver,uri)
-        /* val previewImageReader:ImageReader=ImageReader.newInstance(800,800, ImageFormat.YUV_420_888,1)
-        val previewCallback:ImageReader.OnImageAvailableListener=ImageReader.OnImageAvailableListener {
-            @Override
-            fun onImageAvailable(reader:ImageReader){
-                var image:Image=reader.acquireLatestImage()
-                var planes:Array<Image.Plane>
-                planes=image.getPlanes()
-                var buffer: ByteBuffer=planes[0].buffer
-                var data:ByteArray=ByteArray(buffer.capacity())
-                buffer.get(data)
-                val bitmap:Bitmap=BitmapFactory.decodeByteArray(data,0,data.size,null)
-                imageView2.setImageBitmap(bitmap)
 
-                image.close()
-            }
-        }
-        var thread:HandlerThread= HandlerThread("CameraPciture")
-        thread.start()
-        val handler: Handler =Handler(thread.looper)
-        previewImageReader.setOnImageAvailableListener(previewCallback,handler)
-        previewCallback.onImageAvailable(previewImageReader)
 
-        // Populate the ViewPager and implement a cache of two media items
+       /* // Populate the ViewPager and implement a cache of two media items
         val mediaViewPager = view.findViewById<ViewPager>(R.id.imageView2).apply {
             offscreenPageLimit = 2
             adapter = MediaPagerAdapter(childFragmentManager)
-        }
+        }*/
 
         // Make sure that the cutout "safe area" avoids the screen notch if any
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // Use extension method to pad "inside" view containing UI using display cutout's bounds
             view.findViewById<ConstraintLayout>(R.id.cutout_safe_area).padWithDisplayCutout()
         }
-*/
+
         // Handle back button press
         view.findViewById<ImageButton>(R.id.back_button).setOnClickListener {
             //fragmentManager?.popBackStack()
@@ -235,14 +154,13 @@ class GalleryFragment internal constructor() : Fragment() {
 
             var database: PictureDatabase = PictureDatabase.getInstance(activity!!.applicationContext)
             var pictureDao: PictureDao =database.pictureDao
-            picture.image=byteArray
-            Thread { pictureDao.insert(picture) }.start()
-            //
-            //activity?.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            //activity?.setResult(Activity.RESULT_OK,intent)
+            pic.image=byteArray
+            pic.id=0
+            Thread { database.pictureDao.insert(pic) }.start()
+
             activity?.finish()
 
-            /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->
+            /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->  //추후 공유기능을 위해 주석처리
 
 
                 // Create a sharing intent
@@ -270,7 +188,7 @@ class GalleryFragment internal constructor() : Fragment() {
 
 
         // Handle delete button press
-        view.findViewById<ImageButton>(R.id.delete_button).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.delete_button).setOnClickListener {//삭제버튼
             AlertDialog.Builder(view.context, android.R.style.Theme_Material_Dialog)
                 .setTitle(getString(R.string.delete_title))
                 .setMessage(getString(R.string.delete_dialog))
@@ -281,24 +199,7 @@ class GalleryFragment internal constructor() : Fragment() {
                         view.context, arrayOf(mediaList[0].absolutePath), null, null)
                     mediaList.removeAt(0)
                     activity?.finish()
-                    /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->
-
-                        // Delete current photo
-                        mediaFile.delete()
-
-                        // Send relevant broadcast to notify other apps of deletion
-                        MediaScannerConnection.scanFile(
-                                view.context, arrayOf(mediaFile.absolutePath), null, null)
-
-                        // Notify our view pager
-                        mediaList.removeAt(mediaViewPager.currentItem)
-                        mediaViewPager.adapter?.notifyDataSetChanged()
-
-                        // If all photos have been deleted, return to camera
-                        if (mediaList.isEmpty()) {
-                            fragmentManager?.popBackStack()
-                        }
-                    }*/}
+                    }
 
                 .setNegativeButton(android.R.string.no, null)
                 .create().showImmersive()

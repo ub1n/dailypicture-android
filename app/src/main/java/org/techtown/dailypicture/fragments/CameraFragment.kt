@@ -394,10 +394,10 @@ class CameraFragment : Fragment() {
         }
 
         // Listener for button used to view last photo
-        /*controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
+        controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
             Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
                     CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))
-        }*/
+        }
     }
 
 
