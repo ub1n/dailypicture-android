@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -58,7 +59,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
         //카메라 아이콘 버튼
         cameraButton.setOnClickListener { //임시
-            var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            //var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            var intent=Intent(this,CameraActivity::class.java)
             startActivityForResult(intent,123)
         }
         //내보내기 버튼
@@ -84,24 +86,28 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==123){
-
-            var bmp=data?.extras?.get("data") as Bitmap
+            if(data!=null){
+                Toast.makeText(this,"save",Toast.LENGTH_LONG).show()
+                val img=data.getByteArrayExtra("data")
+           *//* var bmp=data?.extras?.get("data") as Bitmap
             var stream= ByteArrayOutputStream()
             bmp?.compress(Bitmap.CompressFormat.JPEG,100,stream)
-            var byteArray=stream.toByteArray()
+            var byteArray=stream.toByteArray()*//*
 
-            picture.image=byteArray
+            picture.image=img
             val database: PictureDatabase = PictureDatabase.getInstance(applicationContext)
             val pictureDao: PictureDao =database.pictureDao
 
             Thread { database.pictureDao.insert(picture) }.start()
             var intent=Intent(this,GoalDetailActivity::class.java)
             startActivity(intent)
-            this.finish()
+            this.finish()}
 
+        }else{
+            Toast.makeText(this,"non-save",Toast.LENGTH_LONG).show()
         }
-    }
+    }*/
 }
