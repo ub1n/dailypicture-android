@@ -10,8 +10,6 @@ interface PictureDao {
     @Query("DELETE FROM picture WHERE id = (:id)")
     fun delete(id:Int)
 
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE) //정보 넣기
     fun insert(picture:Picture)
 
