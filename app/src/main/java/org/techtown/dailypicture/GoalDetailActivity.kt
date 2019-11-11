@@ -72,6 +72,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         back_goal_detail.setOnClickListener{
             var intent=Intent(this,MainActivity::class.java)
             startActivityForResult(intent,3)
+            finish()
         }
         //삭제하기 버튼
         delete_goal_detail.setOnClickListener {
