@@ -17,12 +17,17 @@
 package org.techtown.dailypicture.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.hardware.Camera
 import android.hardware.display.DisplayManager
 import android.media.MediaScannerConnection
@@ -39,6 +44,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.Toast
 import androidx.camera.core.CameraX
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageAnalysisConfig
@@ -51,6 +59,8 @@ import androidx.camera.core.Preview
 import androidx.camera.core.PreviewConfig
 import androidx.navigation.Navigation
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -66,18 +76,26 @@ import com.android.example.cameraxbasic.utils.simulateClick*/
 import org.techtown.dailypicture.utils.ANIMATION_FAST_MILLIS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.add_goal_2.*
+import kotlinx.android.synthetic.main.camera_ui_container.*
+import kotlinx.android.synthetic.main.camera_ui_container.view.*
+import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.techtown.dailypicture.CameraActivity
 import org.techtown.dailypicture.KEY_EVENT_ACTION
 import org.techtown.dailypicture.KEY_EVENT_EXTRA
 import org.techtown.dailypicture.R
+import org.techtown.dailypicture.testRoom.GoalDao
+import org.techtown.dailypicture.testRoom.GoalDatabase
 //import org.techtown.dailypicture.frgments.CameraFragmentDirections
 import org.techtown.dailypicture.utils.ANIMATION_FAST_MILLIS
 import org.techtown.dailypicture.utils.ANIMATION_SLOW_MILLIS
 import org.techtown.dailypicture.utils.AutoFitPreviewBuilder
 import org.techtown.dailypicture.utils.simulateClick
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileNotFoundException
 import java.lang.Exception
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -95,7 +113,7 @@ typealias LumaListener = (luma: Double) -> Unit
  * - Image analysis
  */
 class CameraFragment : Fragment() {
-
+    var GET_GALLERY_IMAGE:Int=200
     private lateinit var container: ConstraintLayout
     private lateinit var viewFinder: TextureView
     private lateinit var outputDirectory: File
@@ -373,9 +391,21 @@ class CameraFragment : Fragment() {
                     CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))*/
             }
         }
+        controls.findViewById<ImageButton>(R.id.image_rotate_button).setOnClickListener {  //필터로 쓴 사진 돌려주는 버튼
+            try{
+            var bitmap:Bitmap=imageViewV.drawable.toBitmap()
+            val matrix = Matrix()
+            matrix.postRotate(90f)
+            val bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            imageViewV.setImageBitmap(bmp)}
+            catch(e:Exception){
 
-        // Listener for button used to switch cameras
+            }
+        }
+
+        // 셀카모드 전환버튼
         controls.findViewById<ImageButton>(R.id.camera_switch_button).setOnClickListener {
+
             lensFacing = if (CameraX.LensFacing.FRONT == lensFacing) {
                 CameraX.LensFacing.BACK
             } else {
@@ -393,14 +423,49 @@ class CameraFragment : Fragment() {
             }
         }
 
-        // Listener for button used to view last photo
+        // 필터로쓸 사진 불러오기
         controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
-            Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
-                    CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))
+            /*Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
+                    CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))*/
+            var intent=Intent(Intent.ACTION_PICK);
+            intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
+            startActivityForResult(intent,GET_GALLERY_IMAGE)
+        }
+       // 투명도 조절
+        val seekBar = controls.findViewById<SeekBar>(R.id.seekBar)
+        seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // Write code to perform some action when progress is changed.
+                var flo:Float=(progress.toFloat()/100)
+                imageViewV.alpha=flo
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is started.
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is stopped.
+
+            }
+        })
+
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            val selectedImageUri = data.data
+            imageViewV.setImageURI(selectedImageUri)
+            imageViewV.alpha= 0.5F
+            seekBar.progress=50
+            seekBar.visibility=View.VISIBLE
+            image_rotate_button.visibility=View.VISIBLE
+
+
+
         }
     }
-
-
     /**
      * 우리의 사용자 정의 이미지 분석 클래스.
           *
