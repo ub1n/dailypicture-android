@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,8 @@ import java.util.*
 class MainAdapter(private var goalList : List<Goal>, context : Context) : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.goal_item_view, parent, false)
-
+        //이미지 위에 어둡게 씌우는 것
+        view.goal_imageView.setColorFilter(Color.parseColor("#882C2C2C"))
         return ViewHolder(view)
     }
 
@@ -41,6 +43,8 @@ class MainAdapter(private var goalList : List<Goal>, context : Context) : Recycl
                     val picture= BitmapFactory.decodeByteArray(byteArray,0,byteArray!!.size)
                     goal_imageView.setImageBitmap(picture)
 
+                    //item 위에 글자쓰기
+                    goal_text.setText(item.goal_name)
                 }
             }
         }
@@ -58,5 +62,6 @@ class MainAdapter(private var goalList : List<Goal>, context : Context) : Recycl
     }
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val goal_imageView: ImageView =view.goal_imageView
+        val goal_text: TextView =view.goal_imageView_text
     }
 }

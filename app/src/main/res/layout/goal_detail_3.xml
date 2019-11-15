@@ -1,88 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10sp"
     android:orientation="vertical"
-    android:padding="20sp"
-    tools:context=".GoalDetailActivity"
-    >
+    tools:context=".GoalDetailActivity">
+
+    <!--    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">-->
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="50dp"
+        android:orientation="horizontal"
+        android:padding="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/back_goal_detail"
+            android:layout_width="14dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/back"
+            android:padding="8dp" />
 
-            <TextView
-                android:id="@+id/back_goal_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="뒤로가기"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/delete_goal_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="0"
-                android:gravity="right"
-                android:text="삭제하기"
-                android:textSize="16sp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/empty"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/goalText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:layout_marginBottom="10sp"
-            android:gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="20"
+            android:gravity="center_horizontal|center_vertical"
             android:text="목표 이름"
-            android:textColor="#FF70C8F0"
-            android:textSize="30sp" />
+            android:textColor="#000000"
+            android:textSize="22dp" />
 
-        <ImageButton
-            android:id="@+id/cameraButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="#FFFFFF"
-            app:srcCompat="@drawable/ic_camera_alt_black_40dp"
-            tools:ignore="VectorDrawableCompat" />
+        <TextView
+            android:id="@+id/delete_goal_detail"
+            android:layout_width="18dp"
+            android:layout_height="23dp"
+            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:background="@drawable/delete_2"
+            android:padding="7dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/detailRecyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
+        <Button
+            android:id="@+id/gifbutton"
+            android:layout_width="20dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:background="@drawable/make_video"
+            android:padding="9dp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/gifbutton"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/detailRecyclerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom"
-        android:background="@drawable/button_background"
-        android:text="               내보내기/목표완료               " />
+        android:layout_marginBottom="100dp"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/cameraButton"
+        app:layout_constraintStart_toStartOf="parent">
 
-</RelativeLayout>
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/cameraButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/add_photo_2"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
