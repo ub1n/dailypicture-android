@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity()  {
         main_setting.setOnClickListener {
             var intent=Intent(this,SettingActivity::class.java)
             startActivityForResult(intent,2)
-            finish()
         }
     }
 

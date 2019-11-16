@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10sp"
     android:orientation="vertical"
-    android:padding="20sp"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -14,37 +12,39 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:gravity="center"
-            android:text="Daily Picture"
-            android:textColor="#000000"
-            android:textSize="24sp" />
+            android:background="@android:color/white"
+            android:elevation="50dp"
+            android:padding="18dp">
 
-        <TextView
-            android:id="@+id/main_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_settings_black_24dp" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:text="목표"
-            android:textColor="#FF70C8F0"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="368dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="@font/nanum_square"
+                android:gravity="center"
+                android:text="     Daily picture"
+                android:textColor="#000000"
+                android:textSize="23sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/main_setting"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/settings"
+                android:gravity="bottom" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -52,12 +52,13 @@
 
     <Button
         android:id="@+id/goalAddbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom"
-        android:background="@drawable/button_background"
-        android:text="               목표 추가하기               " />
+        android:layout_centerHorizontal="false"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/write_3" />
 
 </RelativeLayout>

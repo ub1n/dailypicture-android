@@ -1,5 +1,6 @@
 package org.techtown.dailypicture
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 
@@ -42,10 +44,17 @@ class AddGoalActivity: AppCompatActivity() {
 
         //목표 등록 확인 버튼
         button_add.setOnClickListener {
-
-            var intent= Intent(this,MainActivity::class.java)
-            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            this.finish()
+            if(goal_input_add.length()==0){
+                Toast.makeText(applicationContext,"목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
+            }else {
+                goal.goal_name=goal_input_add.text.toString()
+                val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
+                val goalDao: GoalDao =database.goalDao
+                Thread{database.goalDao.insert(goal)}.start()
+                var intent = Intent(this, MainActivity::class.java)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                this.finish()
+            }
         }
 
         //대표 사진 설정 부분
@@ -57,21 +66,23 @@ class AddGoalActivity: AppCompatActivity() {
     }
 
     //갤러리에서 이미지 불러오는 것
+    //밑 SuppressLint는 에러나서 추가함
+    @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             val selectedImageUri = data.data
             imageView_add.setImageURI(selectedImageUri)
 
-            goal.goal_name=goal_input_add.text.toString()
-            Log.d("로그","목표 추가할때"+goal.goal_name)
+            //goal.goal_name=goal_input_add.text.toString()
+            //Log.d("로그","목표 추가할때"+goal.goal_name)
             //갤러리에서 이미지 불러오는건 Uri, Room에 넣는 건 ByteArray이므로 변환필요
             if (selectedImageUri != null) {
                 goal.image=convertImageToByte(selectedImageUri)
             }
-            val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
-            val goalDao: GoalDao =database.goalDao
+            //val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
+            //val goalDao: GoalDao =database.goalDao
 
-            Thread{database.goalDao.insert(goal)}.start()
+            //Thread{database.goalDao.insert(goal)}.start()
         }
     }
 

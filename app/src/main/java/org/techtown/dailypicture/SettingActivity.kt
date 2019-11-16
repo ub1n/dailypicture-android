@@ -41,14 +41,14 @@ class SettingActivity : AppCompatActivity() {
         //알람 설정 여부 스위치
         switch1.setOnCheckedChangeListener{buttonView,isChecked ->
             if(isChecked){
-                on_off.setText("ON")
+                //on_off.setText("ON")
                 alarmEditor.putString("alarm","alarm_on")
                 alarmEditor.commit()
                 //알람 켜기
                 ReminderWorker.runAt()
             }
             else{
-                on_off.setText("OFF")
+                //on_off.setText("OFF")
                 alarmEditor.putString("alarm","alarm_off")
                 alarmEditor.commit()
                 //알람 끄기
