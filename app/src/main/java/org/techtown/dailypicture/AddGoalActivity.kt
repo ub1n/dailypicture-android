@@ -73,16 +73,10 @@ class AddGoalActivity: AppCompatActivity() {
             val selectedImageUri = data.data
             imageView_add.setImageURI(selectedImageUri)
 
-            //goal.goal_name=goal_input_add.text.toString()
-            //Log.d("로그","목표 추가할때"+goal.goal_name)
-            //갤러리에서 이미지 불러오는건 Uri, Room에 넣는 건 ByteArray이므로 변환필요
             if (selectedImageUri != null) {
                 goal.image=convertImageToByte(selectedImageUri)
             }
-            //val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
-            //val goalDao: GoalDao =database.goalDao
 
-            //Thread{database.goalDao.insert(goal)}.start()
         }
     }
 
