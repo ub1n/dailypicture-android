@@ -36,7 +36,8 @@ class SettingActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
+        val deviceWidth = resources.displayMetrics.widthPixels
+        setting_back.setWidth(deviceWidth)
 
         //알람 설정 여부 스위치
         switch1.setOnCheckedChangeListener{buttonView,isChecked ->
