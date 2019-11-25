@@ -1,28 +1,39 @@
 package org.techtown.dailypicture
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import org.techtown.dailypicture.Retrofit.Request.LoginRequest
+import org.techtown.dailypicture.Retrofit.Response.LoginResponse
 import org.techtown.dailypicture.adapter.MainAdapter
 import org.techtown.dailypicture.testRoom.Goal
 import org.techtown.dailypicture.testRoom.GoalDatabase
+import org.techtown.kotlin_todolist.RetrofitGenerator
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity()  {
     var goal= Goal()
     private var goalDatabase:GoalDatabase?=null
     private var goalList=listOf<Goal>()
     lateinit var mAdapter:MainAdapter
+
 
     //권한 요청을 위한 변수
     val multiplePermissionsCode=100
@@ -34,6 +45,10 @@ class MainActivity : AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var intent= this!!.getIntent()
+        var uuid=intent.getStringExtra("uuid");
+        Log.d("uuid",uuid.toString());
 
         //목표 사진 보여주기
         goalDatabase= GoalDatabase.getInstance(this)
@@ -66,6 +81,8 @@ class MainActivity : AppCompatActivity()  {
 
         //목표 추가버튼
         goalAddbutton.setOnClickListener {
+            //여기에 임시로 서버 연결 써놓음
+            LoginServer(uuid,uuid)
             var intent= Intent(this,AddGoalActivity::class.java)
             startActivityForResult(intent,2)
         }
@@ -77,6 +94,10 @@ class MainActivity : AppCompatActivity()  {
             startActivityForResult(intent,2)
         }
     }
+
+
+
+
 
     //퍼미션 체크 및 권한 요청 함수
     private fun checkPermissions(){
@@ -120,5 +141,23 @@ class MainActivity : AppCompatActivity()  {
         }
     }
 
+    //uuid값 전달하고 토큰 값 받아오기
+    private fun LoginServer(username:String,password:String){
+        //var string:String="null"
+        //Retrofit 서버 연결
+        val loginRequest=LoginRequest(username,password)
+        val call=RetrofitGenerator.create().getToken(loginRequest)
+        val intent = Intent(this, MainActivity::class.java)
+        call.enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                //토큰 값 받아오기
+                Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
+            }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+            }
+        })
+        //Log.d("Return",string)
+        //return string
+    }
 
 }

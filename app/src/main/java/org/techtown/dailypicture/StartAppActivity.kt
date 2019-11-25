@@ -3,19 +3,29 @@ package org.techtown.dailypicture
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_start_app.*
+import org.techtown.dailypicture.Retrofit.Request.LoginRequest
+import org.techtown.dailypicture.Retrofit.Request.RegisterRequest
+import org.techtown.dailypicture.Retrofit.Response.LoginResponse
+import org.techtown.dailypicture.Retrofit.Response.RegisterResponse
+import org.techtown.kotlin_todolist.RetrofitGenerator
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 class StartAppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_app)
 
-        //var terms_agree_1: Int = 0 //이용약관 .체크되면 1,아니면 0
-        //var terms_agree_2: Int = 0 //개인정보동의
         var terms_agree_3: Int = 0 //전체 동의
+
+        var uuid:String=getUuid()
 
         //글씨 밑에 밑줄
         text_require1.getPaint().setUnderlineText(true)
@@ -32,68 +42,53 @@ class StartAppActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            /*//이용약관 체크박스
-            checkBox1.setOnClickListener(View.OnClickListener {
-                if (checkBox1.isChecked) {
-                    terms_agree_1 = 1;
-                } else {
-                    terms_agree_1 = 0;
-                }
-            }
-            )
-            //개인정보 동의 체크박스
-            checkBox2.setOnClickListener(View.OnClickListener {
-                if (checkBox2.isChecked) {
-                    terms_agree_2 = 1;
-                } else {
-                    terms_agree_2 = 0;
-                }
-            }
-            )*/
             //전체동의 체크박스
             checkBox3.setOnClickListener(View.OnClickListener {
-                /*if (checkBox3.isChecked) {
-                    terms_agree_3 = 1;
-                    checkBox1.setChecked(true)
-                    checkBox2.setChecked(true)
-                } else {
-                    terms_agree_3 = 0;
-                    checkBox1.setChecked(false)
-                    checkBox2.setChecked(false)
-                }*/
                 terms_agree_3 = 1
             }
             )
 
-
             //시작하기 버튼
             btn_start.setOnClickListener {
                 if (terms_agree_3 == 1) {
-                    /*if (terms_agree_2 == 1) {
-                        if (terms_agree_1 == 1) {*/
                             saveEditor.putString("agree", "all agree")
                             saveEditor.commit()
+                            RegisterServer(uuid,uuid);
                             var intent = Intent(this, MainActivity::class.java)
+                            //uuid를 전달해준다. 이 값을 기억해야함!
+                            intent.putExtra("uuid",uuid);
                             startActivityForResult(intent, 2)
                             finish()
                         } else {
                             Toast.makeText(applicationContext, "약관을 체크해주세요", Toast.LENGTH_LONG)
                                 .show()
                         }
-                /* } else {
-                     Toast.makeText(applicationContext, "약관을 체크해주세요", Toast.LENGTH_LONG).show()
-                 }
-
-             }
-             //전체약관 체크된 경우
-             else {
-                 saveEditor.putString("agree", "all agree")
-                 saveEditor.commit()
-                 var intent = Intent(this, MainActivity::class.java)
-                 startActivityForResult(intent, 2)
-                 finish()
-             }*/
             }
         }
+    }
+
+    //UUID값 받아오기
+    private fun getUuid():String{
+        //UUID를 생성하지만 랜덤으로 생성되기 때문에 내부 저장소에 저장해두어야함
+        //사용자가 내부저장소를 지우거나 앱을 삭제 후 재설치하는 경우 ID가 달라질 수 있음
+        val uuid= UUID.randomUUID().toString();
+        return uuid
+    }
+
+    //Retrofit 서버 연결
+    private fun RegisterServer(username:String,password:String){
+        val userRequest= RegisterRequest(username)
+        val call= RetrofitGenerator.create().registerUser(userRequest)
+        call.enqueue(object : Callback<RegisterResponse> {
+            override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
+                //토큰 값 받아오기
+                Toast.makeText(this@StartAppActivity,response.body()?.uuid.toString(),Toast.LENGTH_LONG).show()
+            }
+            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+
+            }
+
+        })
+
     }
 }
