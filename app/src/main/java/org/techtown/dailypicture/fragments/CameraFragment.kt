@@ -35,9 +35,11 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.print.PrintAttributes
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Rational
+import android.util.Size
 import android.view.*
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
@@ -239,14 +241,21 @@ class CameraFragment : Fragment() {
             //bitmap 저장 후 file 삭제
             val bitmap2:Bitmap=BitmapFactory.decodeFile(photoFile.absolutePath)
             ImageTon.setBmp(bitmap2)
-            photoFile.delete()
-            MediaScannerConnection.scanFile(
-                context, arrayOf(photoFile.absolutePath), null, null)
+            ImageTon.setImage(photoFile)
+            //photoFile.delete()
+           /* MediaScannerConnection.scanFile(
+                context, arrayOf(photoFile.absolutePath), null, null)*/
           //  ImageTon.setImage(photoFile)
            /* MediaScannerConnection.scanFile(
                     context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null)*/
-            Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
-                CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))
+            try {
+                Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
+                    CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath)
+                )
+
+            }catch(e:Exception){
+                //Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -293,17 +302,21 @@ class CameraFragment : Fragment() {
         // 전체 화면 해상도로 카메라를 설정하는 데 사용되는 화면 메트릭 가져 오기
         val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
         val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
+        //val screenAspectRatio=Rational(1280,720) // container 사이즈 줄이고, 이걸 적용하면 1280,720의 결과값 사진을 얻을 수 있음
         Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
 
         // 카메라 미리보기를 표시하도록 뷰 파인더 사용 사례 설정
         val viewFinderConfig = PreviewConfig.Builder().apply {
             setLensFacing(lensFacing)
             // CameraX가 사용 사례를 최적화 할 수 있도록 종횡비를 요청하지만 해상도는 없습니다.
-            setTargetAspectRatio(screenAspectRatio)
-
+            //setTargetAspectRatio(screenAspectRatio)   //camerax 에서 해상도 자동설정
+            //setTargetAspectRatio(Rational(2560,1440))
             // 초기 대상 회전을 설정합니다. 회전이 변경되면 다시 호출해야합니다.
             //이 사용 사례의 수명주기 동안
             setTargetRotation(viewFinder.display.rotation)
+
+            setTargetResolution(Size(metrics.widthPixels,metrics.heightPixels))  //해상도 직접설정
+            //setCaptureMode(CaptureMode.MAX_QUALITY)
             updateTransform()
         }.build()
 
@@ -322,7 +335,7 @@ class CameraFragment : Fragment() {
             // 초기 목표 로테이션을 설정합니다. 로테이션이 바뀌면 다시 호출해야합니다
             // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
-
+            //setTargetResolution()
 
         }.build()
 
