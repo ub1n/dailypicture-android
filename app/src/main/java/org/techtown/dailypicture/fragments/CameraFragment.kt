@@ -19,16 +19,17 @@ package org.techtown.dailypicture.fragments
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Matrix
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.hardware.Camera
+import android.hardware.camera2.CameraMetadata
+import android.hardware.camera2.CaptureRequest.LENS_FACING_BACK
+import android.hardware.camera2.CaptureRequest.SCALER_CROP_REGION
 import android.hardware.display.DisplayManager
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -37,26 +38,15 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Rational
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.TextureView
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.webkit.MimeTypeMap
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.camera.core.CameraX
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageAnalysisConfig
-import androidx.camera.core.ImageCapture
+import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.CaptureMode
 import androidx.camera.core.ImageCapture.Metadata
-import androidx.camera.core.ImageCaptureConfig
-import androidx.camera.core.ImageProxy
-import androidx.camera.core.Preview
-import androidx.camera.core.PreviewConfig
 import androidx.navigation.Navigation
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.toBitmap
@@ -124,6 +114,8 @@ class CameraFragment : Fragment() {
     private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
     private var imageAnalyzer: ImageAnalysis? = null
+
+    val cameraControl: CameraControl = CameraX.getCameraControl(lensFacing)
 
     /** 볼륨을 낮추면 사진찍기 */
     private val volumeDownReceiver = object : BroadcastReceiver() {
@@ -244,8 +236,15 @@ class CameraFragment : Fragment() {
             // [MediaScannerConnection]을 사용하여 스캔
             val mimeType = MimeTypeMap.getSingleton()
                     .getMimeTypeFromExtension(photoFile.extension)
+            //bitmap 저장 후 file 삭제
+            val bitmap2:Bitmap=BitmapFactory.decodeFile(photoFile.absolutePath)
+            ImageTon.setBmp(bitmap2)
+            photoFile.delete()
             MediaScannerConnection.scanFile(
-                    context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null)
+                context, arrayOf(photoFile.absolutePath), null, null)
+          //  ImageTon.setImage(photoFile)
+           /* MediaScannerConnection.scanFile(
+                    context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null)*/
             Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
                 CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))
         }
@@ -257,7 +256,7 @@ class CameraFragment : Fragment() {
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.view_finder)
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
-
+        ImageTon.set()
         // 주요 활동에서 이벤트를 수신 할 인 텐트 필터 설정
         val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
         broadcastManager.registerReceiver(volumeDownReceiver, filter)
@@ -304,6 +303,7 @@ class CameraFragment : Fragment() {
             // 초기 대상 회전을 설정합니다. 회전이 변경되면 다시 호출해야합니다.
             //이 사용 사례의 수명주기 동안
             setTargetRotation(viewFinder.display.rotation)
+            updateTransform()
         }.build()
 
         // 자동 맞춤 미리보기 빌더를 사용하여 크기 및 방향 변경을 자동으로 처리
@@ -312,13 +312,17 @@ class CameraFragment : Fragment() {
         // 사용자가 사진을 찍을 수 있도록 캡처 유스 케이스 설정
         val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
             setLensFacing(lensFacing)
-            setCaptureMode(CaptureMode.MIN_LATENCY)
+            //setCaptureMode(CaptureMode.MIN_LATENCY)
+            //카메라 퀄리티 최대
+            setCaptureMode(CaptureMode.MAX_QUALITY)
             // 프리뷰 설정과 일치하도록 종횡비를 요청하지만 해상도는 요청하지 않지만
             // 요청 된 캡처 모드에 가장 적합한 특정 해상도를 위해 CameraX 최적화
             setTargetAspectRatio(screenAspectRatio)
             // 초기 목표 로테이션을 설정합니다. 로테이션이 바뀌면 다시 호출해야합니다
             // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
+
+
         }.build()
 
         imageCapture = ImageCapture(imageCaptureConfig)
@@ -331,6 +335,7 @@ class CameraFragment : Fragment() {
             // 초기 목표 로테이션을 설정합니다. 로테이션이 바뀌면 다시 호출해야합니다
             // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
+
         }.build()
 
         imageAnalyzer = ImageAnalysis(analyzerConfig).apply {
@@ -347,7 +352,20 @@ class CameraFragment : Fragment() {
         CameraX.bindToLifecycle(
                 viewLifecycleOwner, preview, imageCapture, imageAnalyzer)
     }
-
+    private fun updateTransform() {
+        val matrix = Matrix()
+        val centerX = viewFinder.width / 2f
+        val centerY = viewFinder.height / 2f
+        val rotationDegrees = when (viewFinder.display.rotation) {
+            Surface.ROTATION_0 -> 0
+            Surface.ROTATION_90 -> 90
+            Surface.ROTATION_180 -> 180
+            Surface.ROTATION_270 -> 270
+            else -> return
+        }
+        matrix.postRotate(-rotationDegrees.toFloat(), centerX, centerY)
+        viewFinder.setTransform(matrix)
+    }
     /** 구성을 변경할 때마다 호출되는 카메라 UI 컨트롤을 다시 그리는 데 사용되는 방법s */
     @SuppressLint("RestrictedApi")
     private fun updateCameraUi() {
@@ -363,15 +381,18 @@ class CameraFragment : Fragment() {
         // 사진을 캡처하는 데 사용되는 버튼의 리스너
         controls.findViewById<ImageButton>(R.id.camera_capture_button).setOnClickListener {
             // 수정 가능한 이미지 캡처 사용 사례에 대한 안정적인 참조
+
             imageCapture?.let { imageCapture ->
 
                 // 이미지를 담을 출력 파일 만들기
                 val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
-
+               // ImageTon.setImage(photoFile)
                 // 이미지 캡처 메타 데이터 설정
                 val metadata = Metadata().apply {
                     //전면 카메라 사용시 거울 이미지
-                    isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT
+                    //isReversedVertical = lensFacing == CameraX.LensFacing.FRONT
+                    //isReversedHorizontal=lensFacing==CameraX.LensFacing.FRONT
+
                 }
 
                 // 사진 촬영 후 트리거되는 설정 이미지 캡처 리스너
@@ -391,6 +412,7 @@ class CameraFragment : Fragment() {
                     CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))*/
             }
         }
+
         controls.findViewById<ImageButton>(R.id.image_rotate_button).setOnClickListener {  //필터로 쓴 사진 돌려주는 버튼
             try{
             var bitmap:Bitmap=imageViewV.drawable.toBitmap()
@@ -406,10 +428,14 @@ class CameraFragment : Fragment() {
         // 셀카모드 전환버튼
         controls.findViewById<ImageButton>(R.id.camera_switch_button).setOnClickListener {
 
-            lensFacing = if (CameraX.LensFacing.FRONT == lensFacing) {
-                CameraX.LensFacing.BACK
+            if (CameraX.LensFacing.FRONT == lensFacing) {
+                lensFacing=CameraX.LensFacing.BACK
+                //checkBoxV.isChecked=true
+                ImageTon.change()
+                imageCapture?.setTargetRotation(view!!.display.rotation)
             } else {
-                CameraX.LensFacing.FRONT
+                lensFacing=CameraX.LensFacing.FRONT
+                ImageTon.change()
             }
             try {
                 // 이 방향으로 카메라를 쿼리 할 수있는 경우에만 사용 사례 바인딩
@@ -421,7 +447,10 @@ class CameraFragment : Fragment() {
             } catch (exc: Exception) {
                 // Do nothing
             }
+
         }
+
+
 
         // 필터로쓸 사진 불러오기
         controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
@@ -453,6 +482,7 @@ class CameraFragment : Fragment() {
 
 
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             val selectedImageUri = data.data
@@ -466,6 +496,7 @@ class CameraFragment : Fragment() {
 
         }
     }
+
     /**
      * 우리의 사용자 정의 이미지 분석 클래스.
           *
@@ -546,7 +577,7 @@ class CameraFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "CameraXBasic"
+        private const val TAG = "DailyPicture"
         private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val PHOTO_EXTENSION = ".jpg"
 
