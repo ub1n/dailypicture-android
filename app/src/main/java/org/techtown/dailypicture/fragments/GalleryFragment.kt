@@ -137,6 +137,10 @@ class GalleryFragment internal constructor() : Fragment() {
         //matrix.postRotate(90f)
         val bmp = Bitmap.createBitmap(ImageTon.bm, 0, 0,ImageTon.bm.width, ImageTon.bm.height, matrix, true)
         imageView2.setImageBitmap(bmp)
+        //file 삭제
+        ImageTon.img.delete()
+        MediaScannerConnection.scanFile(
+            context, arrayOf(ImageTon.img.absolutePath), null, null)
         //imageView2.setImageBitmap(ImageTon.img)
 
 

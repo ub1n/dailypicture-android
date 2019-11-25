@@ -7,7 +7,7 @@ import java.io.File
 class ImageTon {
     companion object{
 
-        //lateinit var img: File
+        lateinit var img: File
         lateinit var bm:Bitmap
 
         var selfInt=0
@@ -23,9 +23,9 @@ class ImageTon {
         fun setBmp(bmp:Bitmap){
             bm=bmp
         }
-        /*fun setImage(bmp:File){
+        fun setImage(bmp:File){
             img=bmp
-        }*/
+        }
 
 
     }
