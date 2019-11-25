@@ -47,8 +47,12 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.appcompat.app.AlertDialog
+import androidx.camera.core.CameraX
 import androidx.navigation.ActivityNavigatorExtras
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import kotlinx.android.synthetic.main.camera_ui_container.*
+import kotlinx.android.synthetic.main.camera_ui_container.view.*
 import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.fragment_gallery.*
 /*import org.opencv.android.Utils
@@ -65,8 +69,11 @@ import org.techtown.dailypicture.testRoom.Picture
 import org.techtown.dailypicture.testRoom.PictureDao
 import org.techtown.dailypicture.testRoom.PictureDatabase
 import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
+import java.text.SimpleDateFormat
+import java.util.*
 
 //import org.techtown.dailypicture.frgments.GalleryFragmentArgs
 
@@ -117,13 +124,20 @@ class GalleryFragment internal constructor() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        var bm: Bitmap = BitmapFactory.decodeFile(mediaList[0].path)
+        //var bm: Bitmap = BitmapFactory.decodeFile(mediaList[0].path)
+        //var bm:Bitmap=BitmapFactory.decodeFile(ImageTon.img.absolutePath)
         val matrix = Matrix()
-        matrix.postRotate(90f)
-        val bmp = Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, matrix, true)
+        if (ImageTon.selfInt==1) {
+            //matrix.postRotate(270f)
+            //matrix.postRotate(90f)
+            matrix.setScale(-1.0f, 1.0f)
+            matrix.preRotate(270f)
+        }else if(ImageTon.selfInt==0){
+            matrix.postRotate(90f)}
+        //matrix.postRotate(90f)
+        val bmp = Bitmap.createBitmap(ImageTon.bm, 0, 0,ImageTon.bm.width, ImageTon.bm.height, matrix, true)
         imageView2.setImageBitmap(bmp)
-
-
+        //imageView2.setImageBitmap(ImageTon.img)
 
 
        /* // Populate the ViewPager and implement a cache of two media items
@@ -147,16 +161,30 @@ class GalleryFragment internal constructor() : Fragment() {
         // Handle share button press
         view.findViewById<ImageButton>(R.id.share_button).setOnClickListener {
             // Make sure that we have a file to share
-            var picture=Picture()
-            var stream = ByteArrayOutputStream()
-            bmp?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            var byteArray = stream.toByteArray()
+            //갤러리에 저장
+            var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
 
-            var database: PictureDatabase = PictureDatabase.getInstance(activity!!.applicationContext)
-            var pictureDao: PictureDao =database.pictureDao
-            pic.image=byteArray
-            pic.id=0
-            Thread { database.pictureDao.insert(pic) }.start()
+            try {
+                val photoFile = File(
+                    outputDirectory,
+                    SimpleDateFormat(
+                        "yyyy-MM-dd-HH-mm-ss-SSS",
+                        Locale.US
+                    ).format(System.currentTimeMillis()) + ".jpg"
+                )
+                val ostream: FileOutputStream = FileOutputStream(photoFile)
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, ostream)
+                ostream.close()
+                val mimeType = MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension(photoFile.extension)
+
+                MediaScannerConnection.scanFile(
+                    context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null
+                )
+            }catch(e:Exception){
+                Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
+            }
+
 
             activity?.finish()
 
@@ -186,12 +214,12 @@ class GalleryFragment internal constructor() : Fragment() {
         }
 
 
-
+        //삭제예정
         // Handle delete button press
         view.findViewById<ImageButton>(R.id.delete_button).setOnClickListener {//삭제버튼
             AlertDialog.Builder(view.context, android.R.style.Theme_Material_Dialog)
                 .setTitle(getString(R.string.delete_title))
-                .setMessage(getString(R.string.delete_dialog))
+                .setMessage("사진을 지우시겠습니까?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes) { _, _ ->
                     mediaList[0].delete()
@@ -206,5 +234,6 @@ class GalleryFragment internal constructor() : Fragment() {
 
         }
     }
+
 
 }
