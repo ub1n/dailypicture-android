@@ -6,29 +6,30 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.add_goal_2.*
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import org.techtown.dailypicture.testRoom.Goal
-import org.techtown.dailypicture.testRoom.GoalDao
 import org.techtown.dailypicture.testRoom.GoalDatabase
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.content.ContentResolver
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import org.techtown.dailypicture.Retrofit.Request.PostRequest
+import org.techtown.dailypicture.Retrofit.Response.PostResponse
+import org.techtown.kotlin_todolist.RetrofitGenerator
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class AddGoalActivity: AppCompatActivity() {
     var GET_GALLERY_IMAGE:Int=200
     var goal= Goal()
     private var goalDatabase:GoalDatabase?=null
+    var title:String?=null
+    var thumbnail:String?=null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +49,14 @@ class AddGoalActivity: AppCompatActivity() {
                 Toast.makeText(applicationContext,"목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
             }else {
                 goal.goal_name=goal_input_add.text.toString()
-                val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
-                val goalDao: GoalDao =database.goalDao
-                Thread{database.goalDao.insert(goal)}.start()
-                var intent = Intent(this, MainActivity::class.java)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                this.finish()
+                //val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
+                //val goalDao: GoalDao =database.goalDao
+                //Thread{database.goalDao.insert(goal)}.start()
+                //var intent = Intent(this, MainActivity::class.java)
+                //startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                //this.finish()
+                title=goal_input_add.text.toString();
+                //PostServer(goal_input_add.text.toString(),thumbnail,true);
             }
         }
 
@@ -64,6 +67,33 @@ class AddGoalActivity: AppCompatActivity() {
             startActivityForResult(intent,GET_GALLERY_IMAGE)
         }
     }
+/*
+    private fun PostServer(title:String,thumbnail:String,status:Boolean){
+        val postRequest= PostRequest(title,thumbnail,status)
+        val call= RetrofitGenerator.create().registerPost(postRequest)
+        val intent=Intent(this,MainActivity::class.java)
+        call.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                //Log.d("success", response.body()?.username.toString())
+                Log.d("success", response.code().toString())
+                when(response!!.code()){
+                    201->{
+                        Toast.makeText(this@AddGoalActivity,"목표 등록 성공",Toast.LENGTH_LONG).show()
+                        startActivity(intent)
+                        finish()
+                    }
+                    405->Toast.makeText(this@AddGoalActivity,"목표 등록 실패",Toast.LENGTH_LONG).show()
+                    500->Toast.makeText(this@AddGoalActivity,"서버 오류",Toast.LENGTH_LONG).show()
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.d("fail", "failed")
+            }
+        })
+
+    }
+
+ */
 
     //갤러리에서 이미지 불러오는 것
     //밑 SuppressLint는 에러나서 추가함
@@ -75,6 +105,7 @@ class AddGoalActivity: AppCompatActivity() {
 
             if (selectedImageUri != null) {
                 goal.image=convertImageToByte(selectedImageUri)
+                thumbnail=convertImageToByte(selectedImageUri).toString();
             }
 
         }
