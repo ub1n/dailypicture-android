@@ -3,15 +3,13 @@ package org.techtown.dailypicture
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_start_app.*
-import org.techtown.dailypicture.Retrofit.Request.LoginRequest
 import org.techtown.dailypicture.Retrofit.Request.RegisterRequest
-import org.techtown.dailypicture.Retrofit.Response.LoginResponse
 import org.techtown.dailypicture.Retrofit.Response.RegisterResponse
+import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,13 +17,13 @@ import retrofit2.Response
 import java.util.*
 
 class StartAppActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_app)
 
         var terms_agree_3: Int = 0 //전체 동의
 
-        var uuid:String=getUuid()
 
         //글씨 밑에 밑줄
         text_require1.getPaint().setUnderlineText(true)
@@ -36,9 +34,16 @@ class StartAppActivity : AppCompatActivity() {
         val saveEditor = save.edit()
         val terms_agree_4 = save.getString("agree", "")
 
-
-        if (terms_agree_4 == "all agree") {
-            val intent = Intent(this, MainActivity::class.java)
+        val uuidSP=getSharedPreferences("uuid",Context.MODE_PRIVATE)
+        val uuidEditor=uuidSP.edit()
+        val getuuid=uuidSP.getString("uuid","")
+        val uuid=getUuid()
+        TokenTon.setuuid(uuid)
+        //이전 실행기록이 있는지 확인하는 것
+        if (terms_agree_4 == "all agree"&& getuuid!=null) {
+            val intent = Intent(this, LoadingActivity::class.java)
+            //Toast.makeText(this,getuuid,Toast.LENGTH_LONG).show()
+            intent.putExtra("uuid",getuuid)
             startActivity(intent)
             finish()
         } else {
@@ -53,10 +58,20 @@ class StartAppActivity : AppCompatActivity() {
                 if (terms_agree_3 == 1) {
                             saveEditor.putString("agree", "all agree")
                             saveEditor.commit()
-                            RegisterServer(uuid,uuid);
-                            var intent = Intent(this, MainActivity::class.java)
+
+                            RegisterServer(uuid,uuid)
+                            uuidEditor.putString("uuid",uuid)
+                            uuidEditor.commit()
+
+                            //user.uuid=uuid
+                            //val database:UserDatabase=UserDatabase.getInstance(applicationContext)
+                            //val userDao: UserDao =database.userDao
+                            //Thread{database.userDao.insert(user)}.start()
+
+                            var intent = Intent(this, LoadingActivity::class.java)
+                            intent.putExtra("uuid",getuuid)
                             //uuid를 전달해준다. 이 값을 기억해야함!
-                            intent.putExtra("uuid",uuid);
+                            //intent.putExtra("uuid",uuid);
                             startActivityForResult(intent, 2)
                             finish()
                         } else {
@@ -71,7 +86,8 @@ class StartAppActivity : AppCompatActivity() {
     private fun getUuid():String{
         //UUID를 생성하지만 랜덤으로 생성되기 때문에 내부 저장소에 저장해두어야함
         //사용자가 내부저장소를 지우거나 앱을 삭제 후 재설치하는 경우 ID가 달라질 수 있음
-        val uuid= UUID.randomUUID().toString();
+        val uuid= UUID.randomUUID().toString()
+
         return uuid
     }
 
@@ -82,7 +98,9 @@ class StartAppActivity : AppCompatActivity() {
         call.enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 //토큰 값 받아오기
-                Toast.makeText(this@StartAppActivity,response.body()?.uuid.toString(),Toast.LENGTH_LONG).show()
+                Toast.makeText(this@StartAppActivity,response.body()?.uuid.toString(), Toast.LENGTH_LONG).show()
+                //TokenTon.setuuid(response.body()?.uuid.toString())
+
             }
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
 
@@ -91,4 +109,6 @@ class StartAppActivity : AppCompatActivity() {
         })
 
     }
+
+
 }
