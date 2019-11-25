@@ -15,6 +15,8 @@ import android.util.Log
 import android.widget.Toast
 import org.techtown.dailypicture.Retrofit.Request.PostRequest
 import org.techtown.dailypicture.Retrofit.Response.PostResponse
+import org.techtown.dailypicture.testRoom.GoalDao
+import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
@@ -42,6 +44,7 @@ class AddGoalActivity: AppCompatActivity() {
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             this.finish()
         }
+        Toast.makeText(this, TokenTon.Token,Toast.LENGTH_LONG).show()
 
         //목표 등록 확인 버튼
         button_add.setOnClickListener {
@@ -49,12 +52,12 @@ class AddGoalActivity: AppCompatActivity() {
                 Toast.makeText(applicationContext,"목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
             }else {
                 goal.goal_name=goal_input_add.text.toString()
-                //val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
-                //val goalDao: GoalDao =database.goalDao
-                //Thread{database.goalDao.insert(goal)}.start()
-                //var intent = Intent(this, MainActivity::class.java)
-                //startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                //this.finish()
+                val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
+                val goalDao: GoalDao =database.goalDao
+                Thread{database.goalDao.insert(goal)}.start()
+                var intent = Intent(this, LoadingActivity::class.java)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                this.finish()
                 title=goal_input_add.text.toString();
                 //PostServer(goal_input_add.text.toString(),thumbnail,true);
             }

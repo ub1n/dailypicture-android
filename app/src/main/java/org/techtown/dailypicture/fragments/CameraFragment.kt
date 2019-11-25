@@ -300,6 +300,7 @@ class CameraFragment : Fragment() {
             setLensFacing(lensFacing)
             // CameraX가 사용 사례를 최적화 할 수 있도록 종횡비를 요청하지만 해상도는 없습니다.
             setTargetAspectRatio(screenAspectRatio)
+
             // 초기 대상 회전을 설정합니다. 회전이 변경되면 다시 호출해야합니다.
             //이 사용 사례의 수명주기 동안
             setTargetRotation(viewFinder.display.rotation)
