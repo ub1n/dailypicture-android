@@ -22,7 +22,7 @@ class LoadingActivity : AppCompatActivity() {
 
         val uuid=intent.getStringExtra("uuid")
       //  TokenTon.setuuid(uuid)
-        if(uuid!=""){
+        if(uuid!=""&&uuid!=null){
             TokenTon.setuuid(uuid)
         }
         Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()

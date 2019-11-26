@@ -1,5 +1,6 @@
 package org.techtown.kotlin_todolist
 
+import okhttp3.MultipartBody
 import org.techtown.dailypicture.Retrofit.Request.LoginRequest
 import org.techtown.dailypicture.Retrofit.Request.PostRequest
 import org.techtown.dailypicture.Retrofit.Request.RegisterRequest
@@ -8,9 +9,7 @@ import org.techtown.dailypicture.Retrofit.Response.LoginResponse
 import org.techtown.dailypicture.Retrofit.Response.RegisterResponse
 
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RetrofitService {
     @Headers("Accept: application/json")
@@ -22,4 +21,11 @@ interface RetrofitService {
     @Headers("Accept: application/json")
     @POST("/api-token-auth/")
     fun getToken(@Body user : LoginRequest) : Call<LoginResponse>
+
+    @Multipart
+    @Headers("Accept:application/json")
+    @POST("/posts/")
+    fun registerPost(@Body post:PostRequest, @Header("Authorization")authorization:String):Call<PostResponse>
+//fun registerPost(var title:String,@Part("thumbnail") thumbnail:MultipartBody.Part, @Header("Authorization")authorization:String):Call<PostResponse>
+
 }

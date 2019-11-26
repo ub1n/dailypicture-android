@@ -44,7 +44,9 @@ class MainActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LoginServer(TokenTon.uuid,TokenTon.uuid)
+        if(TokenTon.uuid !=null && TokenTon.uuid !="") {
+            LoginServer(TokenTon.uuid, TokenTon.uuid)
+        }
        // var intent= this!!.getIntent()
         //var uuid=intent.getStringExtra("uuid");
 //        Log.d("uuid",uuid.toString());
