@@ -72,9 +72,9 @@ class AddGoalActivity: AppCompatActivity() {
                     Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
                     Log.d("error",e.toString())
                 }
-                //var intent = Intent(this, MainActivity::class.java)
-                //startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                //this.finish()
+                var intent = Intent(this, MainActivity::class.java)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                this.finish()
 
                 //PostServer(goal_input_add.text.toString(),thumbnail,true);
             }

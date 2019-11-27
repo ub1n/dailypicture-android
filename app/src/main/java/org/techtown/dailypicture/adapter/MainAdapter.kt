@@ -12,23 +12,31 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.detail_item_view.view.*
 import kotlinx.android.synthetic.main.goal_item_view.view.*
 import org.techtown.dailypicture.GoalDetailActivity
 import org.techtown.dailypicture.PhotoDetailActivity
 
 import org.techtown.dailypicture.R
+import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.testRoom.Goal
 import org.techtown.dailypicture.testRoom.Picture
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.net.URL
 import java.util.*
+import java.net.HttpURLConnection
 
-class MainAdapter(private var goalList : List<Goal>, context : Context) : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
+class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
+    var goalList : List<PostResponse> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.goal_item_view, parent, false)
         //이미지 위에 어둡게 씌우는 것
         view.goal_imageView.setColorFilter(Color.parseColor("#882C2C2C"))
+
         return ViewHolder(view)
     }
 
@@ -37,14 +45,23 @@ class MainAdapter(private var goalList : List<Goal>, context : Context) : Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         goalList[position].let{ item ->
             with(holder) {
-                if(item.image!=null) {  //main에서 사진 띄우기
+                if(item.thumbnail!=null) {  //main에서 사진 띄우기
                     //imageView.setImageBitmap(item.image)
-                    val byteArray= item.image
-                    val picture= BitmapFactory.decodeByteArray(byteArray,0,byteArray!!.size)
-                    goal_imageView.setImageBitmap(picture)
 
+                    val thumbnail= item.thumbnail
+                    /*val url: URL =URL(thumbnail)
+                    val conn:HttpURLConnection=url.openConnection() as HttpURLConnection
+                    conn.setDoInput(true)
+                    conn.connect()
+                    val iss:InputStream=conn.inputStream
+                    //val iss: InputStream =url.openConnection().inputStream
+
+                    val picture= BitmapFactory.decodeStream(iss)*/
+                    //goal_imageView.setImageBitmap(picture)
+                    Picasso.get().load(thumbnail).into(goal_imageView)
                     //item 위에 글자쓰기
-                    goal_text.setText(item.goal_name)
+                    goal_text.setText(item.title)
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -52,13 +69,16 @@ class MainAdapter(private var goalList : List<Goal>, context : Context) : Recycl
         //각 item에 클릭 이벤트 붙이기
         holder.itemView.setOnClickListener { view->
             var intent=Intent(view.context, GoalDetailActivity::class.java)
-            intent.putExtra("goal_name",goalList[position].goal_name)
             intent.putExtra("goal_id",goalList[position].id)
             view.context.startActivity(intent)
         }
 
 
 
+    }
+    fun setGoalListItems(goalList: List<PostResponse>){
+        this.goalList = goalList;
+        notifyDataSetChanged()
     }
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val goal_imageView: ImageView =view.goal_imageView
