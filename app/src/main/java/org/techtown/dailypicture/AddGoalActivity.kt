@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.add_goal_2.*
@@ -63,12 +64,18 @@ class AddGoalActivity: AppCompatActivity() {
                 Thread{database.goalDao.insert(goal)}.start()
                 //Toast.makeText(this,file.toString(),Toast.LENGTH_LONG).show()
                 Toast.makeText(this,imgDecodableString.toString(),Toast.LENGTH_LONG).show()
-                //PostServer("a",imgDecodableString.toString())
-
-                var intent = Intent(this, MainActivity::class.java)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                this.finish()
                 title=goal_input_add.text.toString();
+                try {
+                    PostServer(title.toString(), imgDecodableString.toString())
+                }catch (e:Exception){
+                    e.printStackTrace()
+                    Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
+                    Log.d("error",e.toString())
+                }
+                //var intent = Intent(this, MainActivity::class.java)
+                //startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                //this.finish()
+
                 //PostServer(goal_input_add.text.toString(),thumbnail,true);
             }
         }
@@ -100,7 +107,7 @@ class AddGoalActivity: AppCompatActivity() {
             val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
             //이게 파일경로+파일명
             imgDecodableString = cursor.getString(columnIndex)
-            Toast.makeText(this,imgDecodableString,Toast.LENGTH_LONG).show()
+            //Toast.makeText(this,imgDecodableString,Toast.LENGTH_LONG).show()
             cursor.close()
 
             if (selectedImageUri != null) {
@@ -131,20 +138,23 @@ class AddGoalActivity: AppCompatActivity() {
     private fun PostServer(title:String,thumbnail:String){
         //Retrofit 서버 연결
         val file = File(thumbnail)
-        val fileReqBody = RequestBody.create(MediaType.parse("image/*"), file)
-        val part =
-            MultipartBody.Part.createFormData("upload", file.name, fileReqBody)
+        val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val part = MultipartBody.Part.createFormData("thumbnail", file.name, fileReqBody)
 
-        val postRequest=PostRequest(title,file,true)
-        val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
+        val titleRequest=RequestBody.create(MediaType.parse("multipart/form-data"),title)
+
+        //val postRequest=PostRequest(title,thumbnail,true)
+        val call=RetrofitGenerator.create().registerPost(titleRequest,part,"Token "+TokenTon.Token)
+        //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 //토큰 값 받아오기
-                Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
                 //TokenTon.set(response.body()?.token.toString())
             }
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
             }
         })
     }
+
 }
