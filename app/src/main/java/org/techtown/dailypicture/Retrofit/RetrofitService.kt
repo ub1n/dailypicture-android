@@ -49,4 +49,8 @@ interface RetrofitService {
     @Headers("Accept:application/json")
     @DELETE("/posts/{post_id}/")
     fun postIdDelete(@Header("Authorization")authorization:String,@Path("post_id") post_id:Int?):Call<PostIdResponse>
+
+    @Headers("Accept:application/json")
+    @GET("/videos/{id}/video")
+    fun getVideo(@Header("Authorization")authorization:String,@Path("id") id:Int?):Call<VideoResponse>
 }

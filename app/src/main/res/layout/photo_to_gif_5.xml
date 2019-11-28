@@ -1,54 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="20sp"
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+    tools:context=".GifActivitiy"
     android:orientation="vertical"
-    tools:context=".GifActivitiy">
+    android:layout_margin="20sp"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/relativeLayout"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/imageView_gif"
-        android:layout_width="match_parent"
-        android:layout_height="521dp"
-        tools:srcCompat="@tools:sample/avatars" />
+    <VideoView android:layout_height="550dp"
+        android:layout_width="wrap_content"
+        android:id="@+id/videoView"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/upload_gif"
+        android:layout_marginBottom="32dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/download_gif"
+        app:layout_constraintEnd_toStartOf="@+id/upload_gif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Button"
+        android:src="@drawable/ic_file_download_black_24dp"
+        android:padding="20dp"
+        android:background="#00FAF8F8"
+        android:layout_marginEnd="80dp"/>
+
+    <ImageButton
         android:layout_height="wrap_content"
-        android:layout_marginTop="60sp"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom">
+        android:layout_width="wrap_content"
+        android:id="@+id/upload_gif"
+        app:layout_constraintEnd_toStartOf="@+id/back_gif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Button"
+        android:src="@drawable/ic_file_upload_black_24dp"
+        android:padding="20dp"
+        android:background="#00FAF8F8"
+        android:layout_marginEnd="80dp"/>
 
-        <ImageButton
-            android:id="@+id/download_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="50sp"
-            android:layout_weight="1"
-            android:background="#00FAF8F8"
-            android:src="@drawable/ic_file_download_black_24dp"
-            android:text="Button" />
+    <ImageButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/back_gif"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Button"
+        android:src="@drawable/ic_keyboard_backspace_black_24dp"
+        android:padding="20dp"
+        android:background="#00FAF8F8"/>
 
-        <ImageButton
-            android:id="@+id/upload_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="50sp"
-            android:layout_weight="1"
-            android:background="#00FAF8F8"
-            android:src="@drawable/ic_file_upload_black_24dp"
-            android:text="Button" />
+    <ProgressBar
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/progressBar"
+        app:layout_constraintTop_toTopOf="@+id/videoView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/videoView"
+        style="?android:attr/progressBarStyle"/>
 
-        <ImageButton
-            android:id="@+id/back_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="50sp"
-            android:layout_weight="1"
-            android:background="#00FAF8F8"
-            android:src="@drawable/ic_keyboard_backspace_black_24dp"
-            android:text="Button" />
-    </LinearLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
