@@ -23,12 +23,12 @@ class LoadingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_loading)
 
         val uuid=intent.getStringExtra("uuid")
-      //  TokenTon.setuuid(uuid)
+      //  TokenTon.setuuid(uuid)     얘 쓰면 최초실행시 토큰값이상해짐
         if(uuid!=""&&uuid!=null){
             TokenTon.setuuid(uuid)
         }
         Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
-        LoginServer(uuid,uuid)
+        //LoginServer(uuid,uuid)
 
         //RegisterServer(uuid,uuid)
         Handler().postDelayed({

@@ -11,9 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_goal_2.*
 import kotlinx.android.synthetic.main.goal_detail_3.*
+import org.techtown.dailypicture.Retrofit.Response.PostIdResponse
+import org.techtown.dailypicture.Retrofit.Response.PostResponse
+import org.techtown.dailypicture.Retrofit.Response.images
 import org.techtown.dailypicture.adapter.DetailAdapter
 import org.techtown.dailypicture.adapter.MainAdapter
 import org.techtown.dailypicture.testRoom.*
+import org.techtown.dailypicture.utils.TokenTon
+import org.techtown.kotlin_todolist.RetrofitGenerator
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -21,6 +29,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     var picture= Picture()
     private var pictureDatabase:PictureDatabase?=null
     private var pictureList=listOf<Picture>()
+    private var imageList=listOf<images>()
     lateinit var mAdapter:DetailAdapter
     var goal= Goal()
 
@@ -31,15 +40,21 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //목표 이름 불러오기
         var goal_name=getIntent().getStringExtra("goal_name")
         var goal_id=getIntent().getIntExtra("goal_id",0)
+        TokenTon.setpostId(goal_id)
         goalText.setText(goal_name)
+        try{
+        PostIdGetServer()}catch(e:Exception){
+            Toast.makeText(this,"$e",Toast.LENGTH_LONG).show()
+        }
+       // Toast.makeText(this,"${TokenTon.postId}",Toast.LENGTH_LONG).show()
         pictureDatabase=PictureDatabase.getInstance(this)
 
         //이미지 보여주는 recyclerview
-        mAdapter= DetailAdapter(pictureList,applicationContext)
+        mAdapter= DetailAdapter(imageList,applicationContext)
         val r = Runnable {   //recyclerview와 android room 결합
             try {
-                pictureList = pictureDatabase?.pictureDao?.getPicture()!!
-                mAdapter = DetailAdapter(pictureList, applicationContext)
+                //pictureList = pictureDatabase?.pictureDao?.getPicture()!!
+                mAdapter = DetailAdapter(imageList, applicationContext)
                 mAdapter.notifyDataSetChanged()
 
                 detailRecyclerView.adapter = mAdapter
@@ -80,6 +95,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             val database: GoalDatabase = GoalDatabase.getInstance(applicationContext)
             val goalDao: GoalDao =database.goalDao
             Thread{database.goalDao.delete(goal_id)}.start()
+            Delete()
             var intent=Intent(this,MainActivity::class.java)
             startActivityForResult(intent,3)
         }
@@ -110,4 +126,35 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             Toast.makeText(this,"non-save",Toast.LENGTH_LONG).show()
         }
     }*/
+    private fun PostIdGetServer(){
+        //Retrofit 서버 연결
+        val call= RetrofitGenerator.create().postIdPost("Token "+TokenTon.Token,TokenTon.postId)
+        //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
+        call.enqueue(object : Callback<PostIdResponse> {
+            override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
+                Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
+                if(response?.body()?.images != null) {
+                    //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
+                    imageList= response?.body()?.images!!
+
+
+                }
+            }
+            override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
+                Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+    private fun Delete(){
+        val call= RetrofitGenerator.create().postIdDelete("Token "+TokenTon.Token,TokenTon.postId)
+        //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
+        call.enqueue(object : Callback<PostIdResponse> {
+            override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
+
+            }
+            override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
+                Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
+            }
+        })
+    }
 }

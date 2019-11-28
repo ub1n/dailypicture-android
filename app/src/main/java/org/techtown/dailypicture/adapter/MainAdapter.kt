@@ -61,7 +61,7 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
                     Picasso.get().load(thumbnail).into(goal_imageView)
                     //item 위에 글자쓰기
                     goal_text.setText(item.title)
-                    notifyDataSetChanged()
+
                 }
             }
         }
@@ -69,6 +69,7 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
         //각 item에 클릭 이벤트 붙이기
         holder.itemView.setOnClickListener { view->
             var intent=Intent(view.context, GoalDetailActivity::class.java)
+            intent.putExtra("goal_name",goalList[position].title)
             intent.putExtra("goal_id",goalList[position].id)
             view.context.startActivity(intent)
         }
