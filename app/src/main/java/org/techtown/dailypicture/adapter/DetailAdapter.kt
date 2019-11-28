@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.detail_item_view.view.*
 import org.techtown.dailypicture.PhotoDetailActivity
 import org.techtown.dailypicture.R
+import org.techtown.dailypicture.Retrofit.Response.images
 import org.techtown.dailypicture.testRoom.Picture
 
-class DetailAdapter(private var pictureList: List<Picture>, context: Context) :
+class DetailAdapter(private var imageList: List<images>, context: Context) :
     RecyclerView.Adapter<DetailAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -22,18 +24,20 @@ class DetailAdapter(private var pictureList: List<Picture>, context: Context) :
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = pictureList.size
+    override fun getItemCount() = imageList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        pictureList[position].let { item ->
+        imageList[position].let { item ->
             with(holder) {
 
-                if (item.image != null) {  //main에서 사진 띄우기
+                if (item != null) {  //main에서 사진 띄우기
                     //imageView.setImageBitmap(item.image)
-
+/*
                     val byteArray = item.image
                     val picture = BitmapFactory.decodeByteArray(byteArray, 0, byteArray!!.size)
-                    imageView.setImageBitmap(picture)
+                    imageView.setImageBitmap(picture)*/
+                    val thumbnail= item.image
+                    Picasso.get().load(thumbnail).into(imageView)
                 }
             }
         }
@@ -42,8 +46,8 @@ class DetailAdapter(private var pictureList: List<Picture>, context: Context) :
             //photo Detail로 넘어감
             var intent = Intent(view.context, PhotoDetailActivity::class.java)
             //이미지 정보 전달
-            var byteArray = pictureList[position].image
-            var image_id = pictureList[position].id
+            var byteArray = imageList[position].image
+            var image_id = imageList[position].image_id
             intent.putExtra("image", byteArray)
             intent.putExtra("image_id", image_id)
             view.context.startActivity(intent)

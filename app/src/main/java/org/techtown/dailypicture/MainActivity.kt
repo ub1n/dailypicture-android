@@ -13,22 +13,27 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import org.techtown.dailypicture.Retrofit.Request.LoginRequest
 import org.techtown.dailypicture.Retrofit.Response.LoginResponse
+import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.adapter.MainAdapter
 import org.techtown.dailypicture.testRoom.*
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
+import java.io.File
 import java.lang.Exception
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity()  {
     var goal= Goal()
     private var goalDatabase:GoalDatabase?=null
-    private var goalList=listOf<Goal>()
+    private var goalList:List<PostResponse> = listOf()
     lateinit var mAdapter:MainAdapter
 
 
@@ -44,14 +49,17 @@ class MainActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LoginServer(TokenTon.uuid,TokenTon.uuid)
+        if(TokenTon.uuid !=null && TokenTon.uuid !="") {
+            if(TokenTon.Token==""||TokenTon.Token==null){
+                LoginServer(TokenTon.uuid, TokenTon.uuid)}
+        }
        // var intent= this!!.getIntent()
         //var uuid=intent.getStringExtra("uuid");
 //        Log.d("uuid",uuid.toString());
 
         //목표 사진 보여주기
         goalDatabase= GoalDatabase.getInstance(this)
-        mAdapter= MainAdapter(goalList,applicationContext)
+        mAdapter= MainAdapter(applicationContext)
 
         //item 사이에 줄 만들기
         mainRecyclerView.addItemDecoration(
@@ -61,8 +69,8 @@ class MainActivity : AppCompatActivity()  {
 
         val r= Runnable {
             try{
-                goalList=goalDatabase?.goalDao?.getGoal()!!
-                mAdapter= MainAdapter(goalList,applicationContext)
+                //goalList=goalDatabase?.goalDao?.getGoal()!!
+                mAdapter= MainAdapter(applicationContext)
                 mAdapter.notifyDataSetChanged()
 
                 mainRecyclerView.adapter=mAdapter
@@ -75,7 +83,7 @@ class MainActivity : AppCompatActivity()  {
 
         val thread=Thread(r)
         thread.start()
-
+        PostGetServer()
         //카메라, 내장공간 사용 권한
         checkPermissions()
 
@@ -96,6 +104,32 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
+    private fun PostGetServer(){
+        //Retrofit 서버 연결
+        //val postRequest=PostRequest(title,thumbnail,true)
+        val call=RetrofitGenerator.create().getPost("Token "+TokenTon.Token)
+        //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
+        call.enqueue(object : Callback<List<PostResponse>> {
+            override fun onResponse(call: Call<List<PostResponse>>?, response: Response<List<PostResponse>>?) {
+                //토큰 값 받아오기
+                //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
+                //TokenTon.set(response.body()?.token.toString())
+                // )
+                try{
+                mAdapter.setGoalListItems(response?.body()!!)}catch(e:Exception){
+                //    Toast.makeText(this@MainActivity,"$e",Toast.LENGTH_LONG).show()
+                }
+                if(response?.body() != null) {
+                  //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
+                    mAdapter.setGoalListItems(response.body()!!)
+
+                }
+            }
+            override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
+                Toast.makeText(this@MainActivity,"$t",Toast.LENGTH_LONG).show()
+            }
+        })
+    }
 
 
 
@@ -152,8 +186,10 @@ class MainActivity : AppCompatActivity()  {
                 //토큰 값 받아오기
                 Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
                 TokenTon.set(response.body()?.token.toString())
+                //PostGetServer()
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+
             }
         })
     }

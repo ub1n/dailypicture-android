@@ -55,6 +55,9 @@ import kotlinx.android.synthetic.main.camera_ui_container.*
 import kotlinx.android.synthetic.main.camera_ui_container.view.*
 import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.fragment_gallery.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 /*import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -65,9 +68,16 @@ import org.techtown.dailypicture.utils.padWithDisplayCutout
 import org.techtown.dailypicture.BuildConfig
 import org.techtown.dailypicture.CameraActivity
 import org.techtown.dailypicture.GoalDetailActivity
+import org.techtown.dailypicture.Retrofit.Response.ImagePostResponse
+import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.testRoom.Picture
 import org.techtown.dailypicture.testRoom.PictureDao
 import org.techtown.dailypicture.testRoom.PictureDatabase
+import org.techtown.dailypicture.utils.TokenTon
+import org.techtown.kotlin_todolist.RetrofitGenerator
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -178,6 +188,7 @@ class GalleryFragment internal constructor() : Fragment() {
                 )
                 val ostream: FileOutputStream = FileOutputStream(photoFile)
                 bmp.compress(Bitmap.CompressFormat.JPEG, 100, ostream)
+                PostImage(photoFile)
                 ostream.close()
                 val mimeType = MimeTypeMap.getSingleton()
                     .getMimeTypeFromExtension(photoFile.extension)
@@ -185,6 +196,7 @@ class GalleryFragment internal constructor() : Fragment() {
                 MediaScannerConnection.scanFile(
                     context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null
                 )
+
             }catch(e:Exception){
                 Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
             }
@@ -237,6 +249,25 @@ class GalleryFragment internal constructor() : Fragment() {
                 .create().showImmersive()
 
         }
+    }
+    private fun PostImage(file:File){
+        //Retrofit 서버 연결
+        //val file = File(thumbnail)
+        val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val part = MultipartBody.Part.createFormData("url", file.name, fileReqBody)
+
+
+        val call= RetrofitGenerator.create().imagePost(part,"Token "+ TokenTon.Token,TokenTon.postId)
+
+        call.enqueue(object : Callback<ImagePostResponse> {
+            override fun onResponse(call: Call<ImagePostResponse>, response: Response<ImagePostResponse>) {
+                //토큰 값 받아오기
+                //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
+                //TokenTon.set(response.body()?.token.toString())
+            }
+            override fun onFailure(call: Call<ImagePostResponse>, t: Throwable) {
+            }
+        })
     }
 
 

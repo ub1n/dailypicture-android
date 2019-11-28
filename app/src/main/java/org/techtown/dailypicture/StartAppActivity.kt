@@ -39,6 +39,7 @@ class StartAppActivity : AppCompatActivity() {
         val getuuid=uuidSP.getString("uuid","")
         val uuid=getUuid()
         TokenTon.setuuid(uuid)
+
         //이전 실행기록이 있는지 확인하는 것
         if (terms_agree_4 == "all agree"&& getuuid!=null) {
             val intent = Intent(this, LoadingActivity::class.java)

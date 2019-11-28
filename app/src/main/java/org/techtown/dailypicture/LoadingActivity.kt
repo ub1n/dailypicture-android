@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
+import org.techtown.dailypicture.Retrofit.Request.LoginRequest
 import org.techtown.dailypicture.Retrofit.Request.RegisterRequest
+import org.techtown.dailypicture.Retrofit.Response.LoginResponse
 import org.techtown.dailypicture.Retrofit.Response.RegisterResponse
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
@@ -21,11 +23,12 @@ class LoadingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_loading)
 
         val uuid=intent.getStringExtra("uuid")
-      //  TokenTon.setuuid(uuid)
-        if(uuid!=""){
+      //  TokenTon.setuuid(uuid)     얘 쓰면 최초실행시 토큰값이상해짐
+        if(uuid!=""&&uuid!=null){
             TokenTon.setuuid(uuid)
         }
         Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
+        //LoginServer(uuid,uuid)
 
         //RegisterServer(uuid,uuid)
         Handler().postDelayed({
@@ -35,6 +38,23 @@ class LoadingActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         },DURATION)
+    }
+    private fun LoginServer(username:String,password:String){
+        //Retrofit 서버 연결
+        val loginRequest= LoginRequest(username,password)
+        val call=RetrofitGenerator.create().getToken(loginRequest)
+        val intent = Intent(this, MainActivity::class.java)
+        call.enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                //토큰 값 받아오기
+                //Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
+                TokenTon.set(response.body()?.token.toString())
+                //PostGetServer()
+            }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+
+            }
+        })
     }
 
 

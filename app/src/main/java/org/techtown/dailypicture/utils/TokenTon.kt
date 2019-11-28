@@ -10,5 +10,9 @@ class TokenTon {
         fun setuuid(id:String){
             uuid=id
         }
+        var postId:Int?=null
+        fun setpostId(id:Int){
+            postId=id
+        }
     }
 }
