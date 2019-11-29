@@ -136,7 +136,7 @@ class PhotoDetailActivity : AppCompatActivity() {
         val storageDir = File(
             Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES
-            ).toString() + "/Folder Name"
+            ).toString() + "/Daily Picture"
         )
         var success = true
         if (!storageDir.exists()) {

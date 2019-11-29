@@ -173,8 +173,9 @@ class GalleryFragment internal constructor() : Fragment() {
         view.findViewById<ImageButton>(R.id.share_button).setOnClickListener {
             // Make sure that we have a file to share
             //갤러리에 저장
-            var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
             progressBar2.visibility=View.VISIBLE
+            var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
+
             try {
                 val photoFile = File(
                     outputDirectory,
@@ -187,12 +188,15 @@ class GalleryFragment internal constructor() : Fragment() {
                 bmp.compress(Bitmap.CompressFormat.JPEG, 100, ostream)
                 PostImage(photoFile)
                 ostream.close()
-                val mimeType = MimeTypeMap.getSingleton()
+
+                MediaScannerConnection.scanFile(
+                    context, arrayOf(photoFile.absolutePath), null, null)
+                /*val mimeType = MimeTypeMap.getSingleton()
                     .getMimeTypeFromExtension(photoFile.extension)
 
                 MediaScannerConnection.scanFile(
                     context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null
-                )
+                )*/
 
             }catch(e:Exception){
                 Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
@@ -203,7 +207,7 @@ class GalleryFragment internal constructor() : Fragment() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)*/
 
-            Thread.sleep(1_500)
+            Thread.sleep(3_000) //사진 보내질 동안 슬립
             activity?.finish()
 
             /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->  //추후 공유기능을 위해 주석처리
@@ -234,7 +238,7 @@ class GalleryFragment internal constructor() : Fragment() {
 
         //삭제예정
         // Handle delete button press
-        view.findViewById<ImageButton>(R.id.delete_button).setOnClickListener {//삭제버튼
+        /*view.findViewById<ImageButton>(R.id.delete_button).setOnClickListener {//삭제버튼
             AlertDialog.Builder(view.context, android.R.style.Theme_Material_Dialog)
                 .setTitle(getString(R.string.delete_title))
                 .setMessage("사진을 지우시겠습니까?")
@@ -250,7 +254,7 @@ class GalleryFragment internal constructor() : Fragment() {
                 .setNegativeButton(android.R.string.no, null)
                 .create().showImmersive()
 
-        }
+        }*/
     }
     private fun PostImage(file:File){
         //Retrofit 서버 연결
@@ -263,6 +267,7 @@ class GalleryFragment internal constructor() : Fragment() {
 
         call.enqueue(object : Callback<ImagePostResponse> {
             override fun onResponse(call: Call<ImagePostResponse>, response: Response<ImagePostResponse>) {
+                file.delete()
                 //토큰 값 받아오기
                 //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
                 //TokenTon.set(response.body()?.token.toString())
