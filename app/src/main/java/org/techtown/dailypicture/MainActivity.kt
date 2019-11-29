@@ -51,7 +51,9 @@ class MainActivity : AppCompatActivity()  {
 
         if(TokenTon.uuid !=null && TokenTon.uuid !="") {
             if(TokenTon.Token==""||TokenTon.Token==null){
-                LoginServer(TokenTon.uuid, TokenTon.uuid)}
+                LoginServer(TokenTon.uuid, TokenTon.uuid)
+
+            }
         }
        // var intent= this!!.getIntent()
         //var uuid=intent.getStringExtra("uuid");
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity()  {
             DividerItemDecoration(this,DividerItemDecoration.VERTICAL)
         )
 
-
+        PostGetServer()
         val r= Runnable {
             try{
                 //goalList=goalDatabase?.goalDao?.getGoal()!!
@@ -83,7 +85,7 @@ class MainActivity : AppCompatActivity()  {
 
         val thread=Thread(r)
         thread.start()
-        PostGetServer()
+
         //카메라, 내장공간 사용 권한
         checkPermissions()
 
@@ -101,6 +103,11 @@ class MainActivity : AppCompatActivity()  {
             var intent=Intent(this,SettingActivity::class.java)
             startActivityForResult(intent,2)
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        PostGetServer()
     }
 
 

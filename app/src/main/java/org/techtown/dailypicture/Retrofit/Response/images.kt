@@ -1,3 +1,3 @@
 package org.techtown.dailypicture.Retrofit.Response
 
-data class images(var image_id:Int,var image:String?)
+data class images(var id:Int,var url:String?)

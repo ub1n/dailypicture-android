@@ -58,16 +58,13 @@ import kotlinx.android.synthetic.main.fragment_gallery.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.techtown.dailypicture.*
 /*import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc*/
-import org.techtown.dailypicture.R
 import org.techtown.dailypicture.utils.showImmersive
 import org.techtown.dailypicture.utils.padWithDisplayCutout
-import org.techtown.dailypicture.BuildConfig
-import org.techtown.dailypicture.CameraActivity
-import org.techtown.dailypicture.GoalDetailActivity
 import org.techtown.dailypicture.Retrofit.Response.ImagePostResponse
 import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.testRoom.Picture
@@ -177,7 +174,7 @@ class GalleryFragment internal constructor() : Fragment() {
             // Make sure that we have a file to share
             //갤러리에 저장
             var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
-
+            progressBar2.visibility=View.VISIBLE
             try {
                 val photoFile = File(
                     outputDirectory,
@@ -201,7 +198,12 @@ class GalleryFragment internal constructor() : Fragment() {
                 Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
             }
 
+            /*var intent=Intent(activity?.applicationContext, GoalDetailActivity::class.java)
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)*/
 
+            Thread.sleep(1_500)
             activity?.finish()
 
             /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->  //추후 공유기능을 위해 주석처리
@@ -255,9 +257,9 @@ class GalleryFragment internal constructor() : Fragment() {
         //val file = File(thumbnail)
         val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val part = MultipartBody.Part.createFormData("url", file.name, fileReqBody)
+        val titleRequest=RequestBody.create(MediaType.parse("multipart/form-data"),TokenTon.postId.toString())
 
-
-        val call= RetrofitGenerator.create().imagePost(part,"Token "+ TokenTon.Token,TokenTon.postId)
+        val call= RetrofitGenerator.create().imagePost( titleRequest,part,"Token "+ TokenTon.Token,TokenTon.postId)
 
         call.enqueue(object : Callback<ImagePostResponse> {
             override fun onResponse(call: Call<ImagePostResponse>, response: Response<ImagePostResponse>) {
@@ -269,6 +271,7 @@ class GalleryFragment internal constructor() : Fragment() {
             }
         })
     }
+
 
 
 }
