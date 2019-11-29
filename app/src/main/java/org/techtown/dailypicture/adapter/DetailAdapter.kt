@@ -12,11 +12,13 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.detail_item_view.view.*
 import org.techtown.dailypicture.PhotoDetailActivity
 import org.techtown.dailypicture.R
+import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.Retrofit.Response.images
 import org.techtown.dailypicture.testRoom.Picture
 
-class DetailAdapter(private var imageList: List<images>, context: Context) :
+class DetailAdapter( context: Context) :
     RecyclerView.Adapter<DetailAdapter.ViewHolder>() {
+    var imageList : List<images> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.detail_item_view, parent, false)
@@ -36,7 +38,7 @@ class DetailAdapter(private var imageList: List<images>, context: Context) :
                     val byteArray = item.image
                     val picture = BitmapFactory.decodeByteArray(byteArray, 0, byteArray!!.size)
                     imageView.setImageBitmap(picture)*/
-                    val thumbnail= item.image
+                    val thumbnail= item.url
                     Picasso.get().load(thumbnail).into(imageView)
                 }
             }
@@ -46,12 +48,16 @@ class DetailAdapter(private var imageList: List<images>, context: Context) :
             //photo Detail로 넘어감
             var intent = Intent(view.context, PhotoDetailActivity::class.java)
             //이미지 정보 전달
-            var byteArray = imageList[position].image
-            var image_id = imageList[position].image_id
+            var byteArray = imageList[position].url
+            var image_id = imageList[position].id
             intent.putExtra("image", byteArray)
             intent.putExtra("image_id", image_id)
             view.context.startActivity(intent)
         }
+    }
+    fun setGoalListItems(imageList: List<images>){
+        this.imageList = imageList;
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

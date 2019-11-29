@@ -40,8 +40,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //목표 이름 불러오기
         var goal_name=getIntent().getStringExtra("goal_name")
         var goal_id=getIntent().getIntExtra("goal_id",0)
-        TokenTon.setpostId(goal_id)
-        goalText.setText(goal_name)
+        //TokenTon.setpostId(goal_id)
+        //goalText.setText(goal_name)
         try{
         PostIdGetServer()}catch(e:Exception){
             Toast.makeText(this,"$e",Toast.LENGTH_LONG).show()
@@ -50,11 +50,11 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         pictureDatabase=PictureDatabase.getInstance(this)
 
         //이미지 보여주는 recyclerview
-        mAdapter= DetailAdapter(imageList,applicationContext)
+        mAdapter= DetailAdapter(applicationContext)
         val r = Runnable {   //recyclerview와 android room 결합
             try {
                 //pictureList = pictureDatabase?.pictureDao?.getPicture()!!
-                mAdapter = DetailAdapter(imageList, applicationContext)
+                mAdapter = DetailAdapter(applicationContext)
                 mAdapter.notifyDataSetChanged()
 
                 detailRecyclerView.adapter = mAdapter
@@ -86,6 +86,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //뒤로가기 버튼
         back_goal_detail.setOnClickListener{
             var intent=Intent(this,MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivityForResult(intent,3)
             finish()
         }
@@ -97,9 +99,21 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             Thread{database.goalDao.delete(goal_id)}.start()
             Delete()
             var intent=Intent(this,MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivityForResult(intent,3)
         }
 
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        PostIdGetServer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        PostIdGetServer()
     }
 
     /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -133,12 +147,17 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         call.enqueue(object : Callback<PostIdResponse> {
             override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
                 Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
+                goalText.setText(response?.body()?.title)
                 if(response?.body()?.images != null) {
-                    //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
-                    imageList= response?.body()?.images!!
+                    try {
+                        //imageList = response?.body()?.images!!
+                        mAdapter.setGoalListItems(response.body()?.images!!)
 
-
+                    } catch (e: Exception) {
+                        Toast.makeText(this@GoalDetailActivity, "$e", Toast.LENGTH_LONG).show()
+                    }
                 }
+
             }
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
                 Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()

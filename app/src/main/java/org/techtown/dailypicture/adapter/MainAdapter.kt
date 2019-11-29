@@ -24,6 +24,7 @@ import org.techtown.dailypicture.R
 import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.testRoom.Goal
 import org.techtown.dailypicture.testRoom.Picture
+import org.techtown.dailypicture.utils.TokenTon
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.URL
@@ -71,6 +72,7 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
             var intent=Intent(view.context, GoalDetailActivity::class.java)
             intent.putExtra("goal_name",goalList[position].title)
             intent.putExtra("goal_id",goalList[position].id)
+            TokenTon.setpostId(goalList[position].id)
             view.context.startActivity(intent)
         }
 

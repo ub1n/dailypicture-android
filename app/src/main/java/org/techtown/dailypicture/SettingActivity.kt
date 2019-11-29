@@ -33,6 +33,8 @@ class SettingActivity : AppCompatActivity() {
         //뒤로가기 버튼
         setting_back.setOnClickListener {
             var intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
         }

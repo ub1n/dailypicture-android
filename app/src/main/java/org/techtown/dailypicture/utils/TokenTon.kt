@@ -14,5 +14,9 @@ class TokenTon {
         fun setpostId(id:Int){
             postId=id
         }
+        var imageId:Int?=null
+        fun setimageId(id:Int){
+            imageId=id
+        }
     }
 }

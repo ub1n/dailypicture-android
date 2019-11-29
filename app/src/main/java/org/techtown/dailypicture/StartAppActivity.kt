@@ -63,7 +63,6 @@ class StartAppActivity : AppCompatActivity() {
                             RegisterServer(uuid,uuid)
                             uuidEditor.putString("uuid",uuid)
                             uuidEditor.commit()
-
                             //user.uuid=uuid
                             //val database:UserDatabase=UserDatabase.getInstance(applicationContext)
                             //val userDao: UserDao =database.userDao
@@ -71,6 +70,8 @@ class StartAppActivity : AppCompatActivity() {
 
                             var intent = Intent(this, LoadingActivity::class.java)
                             intent.putExtra("uuid",getuuid)
+                            intent.putExtra("status",1)
+
                             //uuid를 전달해준다. 이 값을 기억해야함!
                             //intent.putExtra("uuid",uuid);
                             startActivityForResult(intent, 2)

@@ -39,7 +39,7 @@ interface RetrofitService {
     @Headers("Accept:application/json")
     @Multipart
     @POST("/images/{post_id}/list")
-    fun imagePost(@Part url:MultipartBody.Part,@Header("Authorization")authorization:String,@Path("post_id") post_id:Int?):Call<ImagePostResponse>
+    fun imagePost(@Part("post_id") post_id:RequestBody,@Part url:MultipartBody.Part,@Header("Authorization")authorization:String,@Path("post_id") postid:Int?):Call<ImagePostResponse>
 
 
     @Headers("Accept:application/json")
@@ -53,4 +53,8 @@ interface RetrofitService {
     @Headers("Accept:application/json")
     @GET("/videos/{id}/video")
     fun getVideo(@Header("Authorization")authorization:String,@Path("id") id:Int?):Call<VideoResponse>
+
+    @Headers("Accept:application/json")
+    @DELETE("/images/{id}")
+    fun imageDelete(@Header("Authorization")authorization:String,@Path("id") id:Int?):Call<PostIdResponse>
 }

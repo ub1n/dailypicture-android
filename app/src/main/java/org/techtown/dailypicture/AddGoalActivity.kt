@@ -48,6 +48,7 @@ class AddGoalActivity: AppCompatActivity() {
         //뒤로가기 버튼
         goal_back.setOnClickListener {
             var intent= Intent(this,MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             this.finish()
         }
@@ -72,7 +73,9 @@ class AddGoalActivity: AppCompatActivity() {
                     Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
                     Log.d("error",e.toString())
                 }
+                Thread.sleep(1_500) //서버에 등록되는 시간동안 대기
                 var intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 this.finish()
 
