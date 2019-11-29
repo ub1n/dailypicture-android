@@ -64,7 +64,7 @@ class AddGoalActivity: AppCompatActivity() {
                 val goalDao: GoalDao =database.goalDao
                 Thread{database.goalDao.insert(goal)}.start()
                 //Toast.makeText(this,file.toString(),Toast.LENGTH_LONG).show()
-                Toast.makeText(this,imgDecodableString.toString(),Toast.LENGTH_LONG).show()
+                //Toast.makeText(this,imgDecodableString.toString(),Toast.LENGTH_LONG).show()
                 title=goal_input_add.text.toString();
                 try {
                     PostServer(title.toString(), imgDecodableString.toString())

@@ -189,14 +189,14 @@ class GalleryFragment internal constructor() : Fragment() {
                 PostImage(photoFile)
                 ostream.close()
 
-                MediaScannerConnection.scanFile(
-                    context, arrayOf(photoFile.absolutePath), null, null)
-                /*val mimeType = MimeTypeMap.getSingleton()
+                /*MediaScannerConnection.scanFile(
+                    context, arrayOf(photoFile.absolutePath), null, null)*/
+                val mimeType = MimeTypeMap.getSingleton()
                     .getMimeTypeFromExtension(photoFile.extension)
 
                 MediaScannerConnection.scanFile(
                     context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null
-                )*/
+                )
 
             }catch(e:Exception){
                 Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
@@ -267,7 +267,7 @@ class GalleryFragment internal constructor() : Fragment() {
 
         call.enqueue(object : Callback<ImagePostResponse> {
             override fun onResponse(call: Call<ImagePostResponse>, response: Response<ImagePostResponse>) {
-                file.delete()
+                //file.delete()
                 //토큰 값 받아오기
                 //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
                 //TokenTon.set(response.body()?.token.toString())
