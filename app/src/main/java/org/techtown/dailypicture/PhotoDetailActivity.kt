@@ -2,18 +2,18 @@ package org.techtown.dailypicture
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.photo_detail_4.*
 import org.techtown.dailypicture.Retrofit.Response.PostIdResponse
-import org.techtown.dailypicture.testRoom.PictureDao
-import org.techtown.dailypicture.testRoom.PictureDatabase
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
 import retrofit2.Call
@@ -21,7 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 
 
 class PhotoDetailActivity : AppCompatActivity() {
@@ -59,14 +58,25 @@ class PhotoDetailActivity : AppCompatActivity() {
 
         //저장버튼
         download_detail.setOnClickListener {
-            // saveImageToInternalStorage(picture)
-            //saveImageToExternalStorage(picture)
+            //url로 이미지 저장시 Glide 이용
+            Glide.with(this)
+                .asBitmap()
+                .load(image)
+                .into(object : SimpleTarget<Bitmap>(1920, 1080) {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                    ) {
+                        saveImage(resource)
+                    }
+                })
             Toast.makeText(this, "갤러리에 저장되었습니다.", Toast.LENGTH_LONG).show()
         }
 
     }
 
-    //갤러리로 저장
+    /*
+    //갤러리로 저장(서버 없을 때)
     private fun saveImageToExternalStorage(finalBitmap: Bitmap) {
         val root =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
@@ -98,17 +108,67 @@ class PhotoDetailActivity : AppCompatActivity() {
         }
 
     }
-    private fun Delete(id:Int?){
-        val call= RetrofitGenerator.create().imageDelete("Token "+TokenTon.Token,id)
+     */
+
+
+    private fun Delete(id: Int?) {
+        val call = RetrofitGenerator.create().imageDelete("Token " + TokenTon.Token, id)
         //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostIdResponse> {
-            override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
+            override fun onResponse(
+                call: Call<PostIdResponse>?,
+                response: Response<PostIdResponse>?
+            ) {
 
             }
+
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
 
             }
         })
+    }
+
+    //갤러리 사진 저장
+    internal fun saveImage(image: Bitmap) {
+        val savedImagePath: String
+
+        val imageFileName = System.currentTimeMillis().toString() + ".jpg"
+        val storageDir = File(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES
+            ).toString() + "/Folder Name"
+        )
+        var success = true
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs()
+        }
+        if (success) {
+            val imageFile = File(storageDir, imageFileName)
+            savedImagePath = imageFile.absolutePath
+            try {
+                val fOut = FileOutputStream(imageFile)
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
+                fOut.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            MediaScannerConnection.scanFile(
+                this, arrayOf(imageFile.toString()), null
+            ) { path, uri ->
+                Log.i("ExternalStorage", "Scanned $path:")
+                Log.i("ExternalStorage", "-> uri=$uri")
+            }
+        }
+    }
+
+
+    private fun galleryAddPic(imagePath: String) {
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val f = File(imagePath)
+        val contentUri = FileProvider.getUriForFile(applicationContext, packageName, f)
+        mediaScanIntent.data = contentUri
+        sendBroadcast(mediaScanIntent)
     }
 
 
