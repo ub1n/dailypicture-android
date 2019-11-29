@@ -44,7 +44,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //goalText.setText(goal_name)
         try{
         PostIdGetServer()}catch(e:Exception){
-            Toast.makeText(this,"$e",Toast.LENGTH_LONG).show()
+            //Toast.makeText(this,"$e",Toast.LENGTH_LONG).show()
         }
        // Toast.makeText(this,"${TokenTon.postId}",Toast.LENGTH_LONG).show()
         pictureDatabase=PictureDatabase.getInstance(this)
@@ -146,7 +146,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostIdResponse> {
             override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
-                Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
                 goalText.setText(response?.body()?.title)
                 if(response?.body()?.images != null) {
                     try {

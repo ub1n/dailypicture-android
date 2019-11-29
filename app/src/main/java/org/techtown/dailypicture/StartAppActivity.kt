@@ -100,7 +100,7 @@ class StartAppActivity : AppCompatActivity() {
         call.enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 //토큰 값 받아오기
-                Toast.makeText(this@StartAppActivity,response.body()?.uuid.toString(), Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@StartAppActivity,response.body()?.uuid.toString(), Toast.LENGTH_LONG).show()
                 //TokenTon.setuuid(response.body()?.uuid.toString())
 
             }

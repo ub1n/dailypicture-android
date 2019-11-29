@@ -52,7 +52,7 @@ class AddGoalActivity: AppCompatActivity() {
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             this.finish()
         }
-        Toast.makeText(this, TokenTon.Token,Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, TokenTon.Token,Toast.LENGTH_LONG).show()
 
         //목표 등록 확인 버튼
         button_add.setOnClickListener {

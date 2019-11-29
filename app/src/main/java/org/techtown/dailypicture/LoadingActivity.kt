@@ -28,7 +28,7 @@ class LoadingActivity : AppCompatActivity() {
         if(uuid!=""&&uuid!=null){
             TokenTon.setuuid(uuid)
         }
-        Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
+        //Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
         if(status==0){
         LoginServer(uuid,uuid)}
 
