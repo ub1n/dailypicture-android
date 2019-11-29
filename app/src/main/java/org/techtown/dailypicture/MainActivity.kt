@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity()  {
         call.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 //토큰 값 받아오기
-                Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
                 TokenTon.set(response.body()?.token.toString())
                 //PostGetServer()
             }

@@ -18,5 +18,9 @@ class TokenTon {
         fun setimageId(id:Int){
             imageId=id
         }
+        var videopath:String?=null
+        fun setvideoPath(Path:String){
+            videopath=Path;
+        }
     }
 }
