@@ -59,6 +59,8 @@ class AddGoalActivity: AppCompatActivity() {
             if(goal_input_add.length()==0){
                 Toast.makeText(applicationContext,"목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
             }else {
+                //Toast.makeText(applicationContext,"로딩중이니 기다려주세요",Toast.LENGTH_LONG).show()
+                button_add.isEnabled=false
                 goal.goal_name=goal_input_add.text.toString()
                 val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
                 val goalDao: GoalDao =database.goalDao

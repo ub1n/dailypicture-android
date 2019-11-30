@@ -173,6 +173,8 @@ class GalleryFragment internal constructor() : Fragment() {
         view.findViewById<ImageButton>(R.id.share_button).setOnClickListener {
             // Make sure that we have a file to share
             //갤러리에 저장
+            //Toast.makeText(this,"로딩중이니 기다려주세요",Toast.LENGTH_LONG).show()
+            share_button.isEnabled=false
             progressBar2.visibility=View.VISIBLE
             var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
 

@@ -5,9 +5,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -47,18 +49,18 @@ class GifActivitiy: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_to_gif_5)
-        //getVideoServer(59)
+        getVideoServer(TokenTon.postId!!)
         //Log.d("str",str_url)
         //mediaController = MediaController(this)
         //mediaController!!.setAnchorView(videoView)
         //videoView.setMediaController(mediaController)
-        //videoView.setVideoPath("https://elasticbeanstalk-ap-northeast-2-085345381111.s3.amazonaws.com/media/video/59/3333.mp4")
+        //videoView.setVideoPath("https://elasticbeanstalk-ap-northeast-2-085345381111.s3.amazonaws.com/media/video/57/keyboard.mp4")
         //videoView.start()
         //로딩하는동안 progressBar돌아가도록
-        //videoView.setOnPreparedListener(MediaPlayer.OnPreparedListener {
-        //    progressBar.visibility = View.GONE
+        videoView.setOnPreparedListener(MediaPlayer.OnPreparedListener {
+            progressBar.visibility = View.GONE
 
-        //})
+        })
         //
         //val uriPath="https://www.demonuts.com/Demonuts/smallvideo.mp4"
         //videoView.setVideoPath("https://www.ebookfrenzy.com/android_book/movie.mp4")
@@ -81,8 +83,8 @@ class GifActivitiy: AppCompatActivity() {
             override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
                 str_url=response.body()?.video_url.toString()
                 TokenTon.setvideoPath(str_url!!)
-                //videoView.setVideoURI(Uri.parse(str_url))
-                //videoView.start()
+                videoView.setVideoURI(Uri.parse(str_url))
+                videoView.start()
             }
             override fun onFailure(call: Call<VideoResponse>, t: Throwable) {
             }

@@ -314,8 +314,8 @@ class CameraFragment : Fragment() {
             // 초기 대상 회전을 설정합니다. 회전이 변경되면 다시 호출해야합니다.
             //이 사용 사례의 수명주기 동안
             setTargetRotation(viewFinder.display.rotation)
-
-            setTargetResolution(Size(metrics.widthPixels,metrics.heightPixels))  //해상도 직접설정
+            setTargetResolution(Size(1080,1920))
+            //setTargetResolution(Size(metrics.widthPixels,metrics.heightPixels))  //해상도 직접설정
             //setCaptureMode(CaptureMode.MAX_QUALITY)
             updateTransform()
         }.build()
@@ -329,6 +329,7 @@ class CameraFragment : Fragment() {
             //setCaptureMode(CaptureMode.MIN_LATENCY)
             //카메라 퀄리티 최대
             setCaptureMode(CaptureMode.MAX_QUALITY)
+            setTargetResolution(Size(1080,1920))
             // 프리뷰 설정과 일치하도록 종횡비를 요청하지만 해상도는 요청하지 않지만
             // 요청 된 캡처 모드에 가장 적합한 특정 해상도를 위해 CameraX 최적화
             setTargetAspectRatio(screenAspectRatio)
