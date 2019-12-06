@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity()  {
         if(TokenTon.uuid !=null && TokenTon.uuid !="") {
             if(TokenTon.Token==""||TokenTon.Token==null){
                 LoginServer(TokenTon.uuid, TokenTon.uuid)
-
             }
         }
        // var intent= this!!.getIntent()
