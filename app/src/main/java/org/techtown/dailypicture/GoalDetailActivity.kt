@@ -7,6 +7,8 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_goal_2.*
@@ -33,9 +35,16 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     lateinit var mAdapter:DetailAdapter
     var goal= Goal()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goal_detail_3)
+
+        if(TokenTon.uuid==""||TokenTon.Token==""){
+            var intent=Intent(this, LoadingActivity::class.java)
+            startActivityForResult(intent,2)
+            finish()
+        }
 
         //목표 이름 불러오기
         var goal_name=getIntent().getStringExtra("goal_name")
