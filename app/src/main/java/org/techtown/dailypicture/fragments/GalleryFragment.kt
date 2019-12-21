@@ -187,7 +187,7 @@ class GalleryFragment internal constructor() : Fragment() {
                     ).format(System.currentTimeMillis()) + ".jpg"
                 )
                 val ostream: FileOutputStream = FileOutputStream(photoFile)
-                bmp.compress(Bitmap.CompressFormat.JPEG, 100, ostream)
+                bmp.compress(Bitmap.CompressFormat.JPEG, 75, ostream)
                 PostImage(photoFile)
                 ostream.close()
 
@@ -209,7 +209,7 @@ class GalleryFragment internal constructor() : Fragment() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)*/
 
-            Thread.sleep(3_000) //사진 보내질 동안 슬립
+            Thread.sleep(1_500) //사진 보내질 동안 슬립
             activity?.finish()
 
             /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->  //추후 공유기능을 위해 주석처리

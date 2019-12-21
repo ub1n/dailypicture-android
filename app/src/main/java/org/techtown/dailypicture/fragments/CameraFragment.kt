@@ -27,6 +27,7 @@ import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.hardware.Camera
+import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraMetadata
 import android.hardware.camera2.CaptureRequest.LENS_FACING_BACK
 import android.hardware.camera2.CaptureRequest.SCALER_CROP_REGION
@@ -49,6 +50,7 @@ import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.CaptureMode
 import androidx.camera.core.ImageCapture.Metadata
+import androidx.camera.view.TextureViewMeteringPointFactory
 import androidx.navigation.Navigation
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.toBitmap
@@ -71,6 +73,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.add_goal_2.*
 import kotlinx.android.synthetic.main.camera_ui_container.*
 import kotlinx.android.synthetic.main.camera_ui_container.view.*
+import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,6 +92,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.lang.Exception
+import java.lang.Math.abs
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.ArrayDeque
@@ -118,6 +122,7 @@ class CameraFragment : Fragment() {
     private var imageAnalyzer: ImageAnalysis? = null
 
     val cameraControl: CameraControl = CameraX.getCameraControl(lensFacing)
+    //val cameraInfo=CameraX.getCameraInfo(lensFacing)
 
     /** 볼륨을 낮추면 사진찍기 */
     private val volumeDownReceiver = object : BroadcastReceiver() {
@@ -128,6 +133,7 @@ class CameraFragment : Fragment() {
                     val shutter = container
                             .findViewById<ImageButton>(R.id.camera_capture_button)
                     shutter.simulateClick()
+
                 }
             }
         }
@@ -264,6 +270,11 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.view_finder)
+
+        //val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
+        //val width2=metrics.widthPixels
+        val width2=viewFinder.layoutParams.width
+        viewFinder.layoutParams.height=1080  // 이 값 조절하면 화면크기 조절 될듯
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
         ImageTon.set()
         // 주요 활동에서 이벤트를 수신 할 인 텐트 필터 설정
@@ -302,6 +313,7 @@ class CameraFragment : Fragment() {
         // 전체 화면 해상도로 카메라를 설정하는 데 사용되는 화면 메트릭 가져 오기
         val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
         val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
+        val width=metrics.widthPixels
         //val screenAspectRatio=Rational(1280,720) // container 사이즈 줄이고, 이걸 적용하면 1280,720의 결과값 사진을 얻을 수 있음
         Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
 
@@ -314,10 +326,12 @@ class CameraFragment : Fragment() {
             // 초기 대상 회전을 설정합니다. 회전이 변경되면 다시 호출해야합니다.
             //이 사용 사례의 수명주기 동안
             setTargetRotation(viewFinder.display.rotation)
-            setTargetResolution(Size(1080,1920))
+            setTargetResolution(Size(1080,1080))
+            setTargetAspectRatio(Rational(width,width))   //화면 비율?
             //setTargetResolution(Size(metrics.widthPixels,metrics.heightPixels))  //해상도 직접설정
             //setCaptureMode(CaptureMode.MAX_QUALITY)
             updateTransform()
+
         }.build()
 
         // 자동 맞춤 미리보기 빌더를 사용하여 크기 및 방향 변경을 자동으로 처리
@@ -328,11 +342,15 @@ class CameraFragment : Fragment() {
             setLensFacing(lensFacing)
             //setCaptureMode(CaptureMode.MIN_LATENCY)
             //카메라 퀄리티 최대
-            setCaptureMode(CaptureMode.MAX_QUALITY)
-            setTargetResolution(Size(1080,1920))
+            //setCaptureMode(CaptureMode.MAX_QUALITY)
+
+            setTargetResolution(Size(1080,1080))
+            val height=1920
+            //val width=1080
+            val screenAspectRa = Rational(width, width)
             // 프리뷰 설정과 일치하도록 종횡비를 요청하지만 해상도는 요청하지 않지만
             // 요청 된 캡처 모드에 가장 적합한 특정 해상도를 위해 CameraX 최적화
-            setTargetAspectRatio(screenAspectRatio)
+            setTargetAspectRatio(screenAspectRa)
             // 초기 목표 로테이션을 설정합니다. 로테이션이 바뀌면 다시 호출해야합니다
             // during the lifecycle of this use case
             setTargetRotation(viewFinder.display.rotation)
@@ -427,6 +445,53 @@ class CameraFragment : Fragment() {
                     CameraFragmentDirections.actionCameraToGallery(outputDirectory.absolutePath))*/
             }
         }
+        controls.findViewById<TextureView>(R.id.view_finder).setOnTouchListener(object :View.OnTouchListener{
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                if(event?.action==MotionEvent.ACTION_UP){ //터치시 포커스
+                    val factory:MeteringPointFactory = TextureViewMeteringPointFactory(view_finder)
+                    val point = factory.createPoint(event!!.x, event!!.y)
+                    val action = FocusMeteringAction.Builder.from(point).build()
+                    cameraControl.startFocusAndMetering(action)
+
+                    return true
+                }
+
+
+
+
+
+                return true
+
+                /*if(event?.action==MotionEvent.ACTION_MOVE){
+                    var touch_interval_X:Float=0f
+                    var touch_interval_Y:Float=0f
+                    var zoom_in_count=0
+                    var zoom_out_count=0
+                    var touch_zoom=0
+                    if(event.pointerCount==2){
+                        var now_interval_X=abs(event.getX(0)-event.getX(1))
+                        var now_interval_Y=abs(event.getY(0)-event.getY(1))
+                        if(touch_interval_X<now_interval_X&&touch_interval_Y<now_interval_Y){
+                            zoom_in_count++
+                            if(zoom_in_count>5){
+                                zoom_in_count=0
+                                touch_zoom+=5
+                                if(touch_zoom>100){
+                                    touch_zoom=100
+                                }
+                                val my=Rect(touch_zoom,touch_zoom,touch_zoom,touch_zoom)
+                                preview?.zoom(my)
+
+
+                            }
+                        }
+
+                    }
+                }
+                return true*/
+            }
+        })
+
 
         controls.findViewById<ImageButton>(R.id.image_rotate_button).setOnClickListener {  //필터로 쓴 사진 돌려주는 버튼
             try{
@@ -497,6 +562,29 @@ class CameraFragment : Fragment() {
 
 
     }
+    /*private fun setUpPinchToZoom() { //실패... 현재버전에서 불가
+        val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                val currentZoomRatio: Float = cameraInfo?.zoomRatio?.value ?: 0F
+                val delta = detector.scaleFactor
+                cameraControl.setZoomRatio(currentZoomRatio * delta)
+
+
+
+
+                return true
+            }
+        }
+
+        val scaleGestureDetector = ScaleGestureDetector(context, listener)
+
+        view_finder.setOnTouchListener { _, event ->
+            scaleGestureDetector.onTouchEvent(event)
+            return@setOnTouchListener true
+        }
+    }*/
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
@@ -506,6 +594,9 @@ class CameraFragment : Fragment() {
             seekBar.progress=50
             seekBar.visibility=View.VISIBLE
             image_rotate_button.visibility=View.VISIBLE
+            imageViewV.layoutParams.height=1080
+            imageViewV.layoutParams.width=1080
+
 
 
 

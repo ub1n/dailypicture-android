@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
-    android:layout_width="385dp"
+    android:layout_width="match_parent"
     android:layout_height="250dp"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="10dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         card_view:cardCornerRadius="7dp">
 
         <ImageView
@@ -31,32 +35,31 @@
             android:layout_alignRight="@+id/goal_imageView"
             android:layout_alignBottom="@+id/goal_imageView"
             android:layout_margin="1dp"
+            android:fontFamily="@font/nanum_square"
             android:gravity="center"
             android:paddingLeft="20dp"
             android:paddingTop="180dp"
             android:text="Hello"
-            android:fontFamily="@font/nanum_square"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/goal_arrow"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/goal_imageView"
             android:layout_alignTop="@+id/goal_imageView"
             android:layout_alignRight="@+id/goal_imageView"
             android:layout_alignBottom="@+id/goal_imageView"
             android:layout_margin="1dp"
-            android:gravity="center"
-            android:paddingLeft="340dp"
+            android:fontFamily="@font/nanum_square"
+            android:gravity="center|right"
             android:paddingTop="90dp"
             android:text=">"
-            android:fontFamily="@font/nanum_square"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

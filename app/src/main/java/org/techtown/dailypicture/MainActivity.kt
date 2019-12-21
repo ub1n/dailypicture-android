@@ -25,6 +25,7 @@ import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.adapter.MainAdapter
 import org.techtown.dailypicture.testRoom.*
 import org.techtown.dailypicture.utils.TokenTon
+import org.techtown.dailypicture.utils.showImmersive
 import org.techtown.kotlin_todolist.RetrofitGenerator
 import java.io.File
 import java.lang.Exception
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity()  {
                 LoginServer(TokenTon.uuid, TokenTon.uuid)
             }
         }
+
        // var intent= this!!.getIntent()
         //var uuid=intent.getStringExtra("uuid");
 //        Log.d("uuid",uuid.toString());
@@ -108,6 +110,10 @@ class MainActivity : AppCompatActivity()  {
         super.onRestart()
         PostGetServer()
     }
+    override fun onResume(){
+        super.onResume()
+        PostGetServer()
+    }
 
 
     private fun PostGetServer(){
@@ -121,6 +127,13 @@ class MainActivity : AppCompatActivity()  {
                 //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
                 //TokenTon.set(response.body()?.token.toString())
                 // )
+                if(response?.isSuccessful==false){
+
+                    //Toast.makeText(applicationContext,response.message(),Toast.LENGTH_LONG).show()
+                }
+
+
+
                 try{
                 mAdapter.setGoalListItems(response?.body()!!)}catch(e:Exception){
                 //    Toast.makeText(this@MainActivity,"$e",Toast.LENGTH_LONG).show()
@@ -128,6 +141,7 @@ class MainActivity : AppCompatActivity()  {
                 if(response?.body() != null) {
                   //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
                     mAdapter.setGoalListItems(response.body()!!)
+
 
                 }
             }
@@ -186,9 +200,10 @@ class MainActivity : AppCompatActivity()  {
         //Retrofit 서버 연결
         val loginRequest=LoginRequest(username,password)
         val call=RetrofitGenerator.create().getToken(loginRequest)
-        val intent = Intent(this, MainActivity::class.java)
+        //val intent = Intent(this, MainActivity::class.java)
         call.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+
                 //토큰 값 받아오기
                 //Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
                 TokenTon.set(response.body()?.token.toString())
