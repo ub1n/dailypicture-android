@@ -14,12 +14,12 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:keepScreenOn="true"
     tools:context=".CameraActivity">
 

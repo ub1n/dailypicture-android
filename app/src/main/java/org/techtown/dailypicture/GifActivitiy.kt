@@ -85,6 +85,9 @@ class GifActivitiy: AppCompatActivity() {
                 TokenTon.setvideoPath(str_url!!)
                 videoView.setVideoURI(Uri.parse(str_url))
                 videoView.start()
+                //exoplayer ?? -> 재생 바 보여주기 api??
+                //var a=response.code()
+                //Toast.makeText(applicationContext,"$a",Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<VideoResponse>, t: Throwable) {
             }

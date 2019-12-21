@@ -16,17 +16,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+
         android:usesCleartextTraffic="true">
-        <activity android:name=".CameraActivity" />
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LoadingActivity" />
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".GoalDetailActivity" />
-        <activity android:name=".PhotoDetailActivity" />
-        <activity android:name=".GifActivitiy" />
-        <activity android:name=".AddGoalActivity"/>
-        <activity android:name=".StartAppActivity">
+
+        <activity android:name=".CameraActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoadingActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GoalDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PhotoDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GifActivitiy"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddGoalActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".StartAppActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
