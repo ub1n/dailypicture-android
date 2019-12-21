@@ -76,6 +76,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             }
         }
 
+
         val thread = Thread(r)
         thread.start()
 
@@ -89,8 +90,11 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         }
         //내보내기 버튼
         gifbutton.setOnClickListener {
+            if(mAdapter.itemCount<3){ //여기 카운트 갯수 바꾸면 사진갯수 조절
+                Toast.makeText(this,"사진의 수가 적습니다. 사진을 20장 이상 찍어주세요",Toast.LENGTH_LONG).show()
+            }else{
             var intent=Intent(this,GifActivitiy::class.java)
-            startActivityForResult(intent,3)
+            startActivityForResult(intent,3)}
         }
         //뒤로가기 버튼
         back_goal_detail.setOnClickListener{
