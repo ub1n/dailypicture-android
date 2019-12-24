@@ -1,68 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-    tools:context=".GifActivitiy"
-    android:orientation="vertical"
-    android:layout_margin="20sp"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:id="@+id/relativeLayout"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GifActivitiy">
 
-    <VideoView android:layout_height="550dp"
-        android:layout_width="wrap_content"
-        android:id="@+id/videoView"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintTop_toTopOf="parent"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="50dp"
+        android:orientation="horizontal"
+        android:padding="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/back_goal_detail"
+            android:layout_width="14dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/left"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/goalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="20"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="목표 이름"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+
+        <Button
+            android:id="@+id/empty"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/upload_gif"
-        android:layout_marginBottom="32dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-    <ImageButton android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/download_gif"
-        app:layout_constraintEnd_toStartOf="@+id/upload_gif"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Button"
-        android:src="@drawable/ic_file_download_black_24dp"
-        android:padding="20dp"
-        android:background="#00FAF8F8"
-        android:layout_marginEnd="80dp"/>
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/upload_gif"
-        app:layout_constraintEnd_toStartOf="@+id/back_gif"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Button"
-        android:src="@drawable/ic_file_upload_black_24dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
         android:padding="20dp"
-        android:background="#00FAF8F8"
-        android:layout_marginEnd="80dp"/>
-
-    <ImageButton
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/back_gif"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Button"
-        android:src="@drawable/ic_keyboard_backspace_black_24dp"
-        android:padding="20dp"
-        android:background="#00FAF8F8"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <ImageButton
+            android:id="@+id/download_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FAF8F8"
+            android:padding="20dp"
+            android:src="@drawable/download" />
+
+        <ImageButton
+            android:id="@+id/upload_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:layout_marginLeft="75dp"
+            android:layout_marginRight="70dp"
+            android:background="#00FAF8F8"
+            android:padding="20dp"
+            android:src="@drawable/share" />
+
+        <ImageButton
+            android:id="@+id/back_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FAF8F8"
+            android:padding="20dp"
+            android:src="@drawable/left" />
+    </LinearLayout>
 
     <ProgressBar
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:id="@+id/progressBar"
-        app:layout_constraintTop_toTopOf="@+id/videoView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/videoView"
-        style="?android:attr/progressBarStyle"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
