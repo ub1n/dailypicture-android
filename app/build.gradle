@@ -69,4 +69,5 @@ dependencies {
     def android_image_cropper_version = "2.8.+"
     api "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper_version"
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
 }

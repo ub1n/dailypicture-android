@@ -13,6 +13,12 @@ import android.view.View
 import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.photo_to_gif_5.*
 import org.techtown.dailypicture.Retrofit.Response.VideoResponse
 import org.techtown.dailypicture.utils.TokenTon
@@ -31,6 +37,8 @@ class GifActivitiy: AppCompatActivity() {
     private var downloadId: Long = -1L
     private lateinit var downloadManager: DownloadManager
     private var downloadID: Long = 0
+    private lateinit var exoPlayer:ExoPlayer
+    private lateinit var context:Context
 
     private val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(
@@ -50,27 +58,28 @@ class GifActivitiy: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_to_gif_5)
         getVideoServer(TokenTon.postId!!)
+        var goal_name=getIntent().getStringExtra("goal_name")
+        goalText.setText(goal_name)
+
         //Log.d("str",str_url)
-        //mediaController = MediaController(this)
-        //mediaController!!.setAnchorView(videoView)
-        //videoView.setMediaController(mediaController)
-        //videoView.setVideoPath("https://elasticbeanstalk-ap-northeast-2-085345381111.s3.amazonaws.com/media/video/57/keyboard.mp4")
-        //videoView.start()
+        mediaController = MediaController(this)
+        mediaController!!.setMediaPlayer(videoView)
+        mediaController!!.setAnchorView(videoView)
+        videoView.setMediaController(mediaController)
+
+
         //로딩하는동안 progressBar돌아가도록
         videoView.setOnPreparedListener(MediaPlayer.OnPreparedListener {
             progressBar.visibility = View.GONE
 
         })
-        //
-        //val uriPath="https://www.demonuts.com/Demonuts/smallvideo.mp4"
-        //videoView.setVideoPath("https://www.ebookfrenzy.com/android_book/movie.mp4")
-        //videoView.start()
-        downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
 
         registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         download_gif.setOnClickListener {
             beginDownload()
+        }
+        back_gif.setOnClickListener {
+            finish()
         }
     }
 
@@ -85,9 +94,6 @@ class GifActivitiy: AppCompatActivity() {
                 TokenTon.setvideoPath(str_url!!)
                 videoView.setVideoURI(Uri.parse(str_url))
                 videoView.start()
-                //exoplayer ?? -> 재생 바 보여주기 api??
-                //var a=response.code()
-                //Toast.makeText(applicationContext,"$a",Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<VideoResponse>, t: Throwable) {
             }

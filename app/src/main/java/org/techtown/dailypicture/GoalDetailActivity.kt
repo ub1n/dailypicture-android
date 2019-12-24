@@ -34,6 +34,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     private var imageList=listOf<images>()
     lateinit var mAdapter:DetailAdapter
     var goal= Goal()
+    var goalname=""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,9 +92,11 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //내보내기 버튼
         gifbutton.setOnClickListener {
             if(mAdapter.itemCount<3){ //여기 카운트 갯수 바꾸면 사진갯수 조절
-                Toast.makeText(this,"사진의 수가 적습니다. 사진을 20장 이상 찍어주세요",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"사진 20장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
+                //Toast.makeText(this,"사진의 수가 적습니다. 사진을 20장 이상 찍어주세요",Toast.LENGTH_LONG).show()
             }else{
             var intent=Intent(this,GifActivitiy::class.java)
+                intent.putExtra("goal_name",goalname)
             startActivityForResult(intent,3)}
         }
         //뒤로가기 버튼
@@ -161,6 +164,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
                 //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
                 goalText.setText(response?.body()?.title)
+                goalname=response?.body()?.title.toString()
                 if(response?.body()?.images != null) {
                     try {
                         //imageList = response?.body()?.images!!

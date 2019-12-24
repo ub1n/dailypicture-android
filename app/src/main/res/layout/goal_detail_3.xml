@@ -32,17 +32,10 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:background="@drawable/back"
+            android:background="@drawable/left"
             android:padding="8dp" />
 
-        <Button
-            android:id="@+id/empty"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="14dp"
-            android:layout_weight="1"
-            android:background="@android:color/white"
-            android:padding="8dp" />
+
 
         <TextView
             android:id="@+id/goalText"
@@ -55,22 +48,15 @@
             android:textColor="#000000"
             android:textSize="22dp" />
 
-        <TextView
-            android:id="@+id/delete_goal_detail"
-            android:layout_width="18dp"
-            android:layout_height="23dp"
+        <Button
+            android:id="@+id/empty"
+            android:layout_width="1dp"
+            android:layout_height="25dp"
             android:layout_marginRight="14dp"
             android:layout_weight="1"
-            android:background="@drawable/delete_2"
-            android:padding="7dp" />
+            android:background="@android:color/white"
+            android:padding="8dp" />
 
-        <Button
-            android:id="@+id/gifbutton"
-            android:layout_width="20dp"
-            android:layout_height="28dp"
-            android:layout_weight="1"
-            android:background="@drawable/make_video"
-            android:padding="9dp" />
     </LinearLayout>
 
 
@@ -90,12 +76,69 @@
         android:id="@+id/cameraButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="120dp"
         android:background="@drawable/add_photo_2"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/gifbutton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/television_play"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="130dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/cameraButton" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="사진찍기"
+        android:textColor="#3D3B3B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraButton" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="6dp"
+        android:text="영상만들기"
+        android:textColor="#3D3B3B"
+        app:layout_constraintStart_toEndOf="@+id/cameraButton"
+        app:layout_constraintTop_toBottomOf="@+id/gifbutton" />
+
+    <TextView
+        android:id="@+id/delete_goal_detail"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="131dp"
+        android:layout_weight="1"
+        android:background="@drawable/delete_alert"
+        android:padding="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cameraButton" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:text="목표삭제"
+        android:textColor="#3D3B3B"
+        app:layout_constraintEnd_toStartOf="@+id/cameraButton"
+        app:layout_constraintTop_toBottomOf="@+id/delete_goal_detail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
