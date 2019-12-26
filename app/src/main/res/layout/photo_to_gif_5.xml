@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="20"
+            android:fontFamily="@font/pt_serif_bold"
             android:gravity="center_horizontal|center_vertical"
             android:text="목표 이름"
             android:textColor="#000000"

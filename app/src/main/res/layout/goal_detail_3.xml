@@ -36,13 +36,13 @@
             android:padding="8dp" />
 
 
-
         <TextView
             android:id="@+id/goalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="20"
+            android:fontFamily="@font/pt_serif_bold"
             android:gravity="center_horizontal|center_vertical"
             android:text="목표 이름"
             android:textColor="#000000"
@@ -65,10 +65,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cameraButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.147">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -76,30 +77,32 @@
         android:id="@+id/cameraButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="120dp"
-        android:background="@drawable/add_photo_2"
+        android:background="@drawable/take_photo_2"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailRecyclerView"
+        app:layout_constraintVertical_bias="0.557" />
 
     <ImageView
         android:id="@+id/gifbutton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/television_play"
-        android:layout_marginStart="50dp"
-        android:layout_marginBottom="130dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/video"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/cameraButton" />
+        app:layout_constraintHorizontal_bias="0.58"
+        app:layout_constraintStart_toEndOf="@+id/cameraButton"
+        app:layout_constraintTop_toBottomOf="@+id/detailRecyclerView"
+        app:layout_constraintVertical_bias="0.577" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="12dp"
         android:text="사진찍기"
         android:textColor="#3D3B3B"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,34 +113,38 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:text="영상만들기"
         android:textColor="#3D3B3B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.62"
         app:layout_constraintStart_toEndOf="@+id/cameraButton"
         app:layout_constraintTop_toBottomOf="@+id/gifbutton" />
 
     <TextView
         android:id="@+id/delete_goal_detail"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="131dp"
+        android:layout_width="27dp"
+        android:layout_height="30dp"
         android:layout_weight="1"
-        android:background="@drawable/delete_alert"
+        android:background="@drawable/delete"
         android:padding="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cameraButton" />
+        app:layout_constraintEnd_toStartOf="@+id/cameraButton"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailRecyclerView"
+        app:layout_constraintVertical_bias="0.577" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginTop="12dp"
         android:text="목표삭제"
         android:textColor="#3D3B3B"
         app:layout_constraintEnd_toStartOf="@+id/cameraButton"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delete_goal_detail" />
 
 

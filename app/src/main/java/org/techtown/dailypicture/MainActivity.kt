@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity()  {
     private var goalDatabase:GoalDatabase?=null
     private var goalList:List<PostResponse> = listOf()
     lateinit var mAdapter:MainAdapter
+    var count:Int?=null     //목표 갯수 세는변수. 갯수에 따라서 xml 달라짐
+    var addIntent:Intent?=null
+    var settingIntent:Intent?=null
 
 
 
@@ -49,6 +53,9 @@ class MainActivity : AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        addIntent= Intent(this,AddGoalActivity::class.java)
+        settingIntent= Intent(this,SettingActivity::class.java)
+
 
         if(TokenTon.uuid !=null && TokenTon.uuid !="") {
             if(TokenTon.Token==""||TokenTon.Token==null){
@@ -56,13 +63,11 @@ class MainActivity : AppCompatActivity()  {
             }
         }
 
-       // var intent= this!!.getIntent()
-        //var uuid=intent.getStringExtra("uuid");
-//        Log.d("uuid",uuid.toString());
 
-        //목표 사진 보여주기
-        goalDatabase= GoalDatabase.getInstance(this)
+        // var intent= this!!.getIntent()
         mAdapter= MainAdapter(applicationContext)
+
+
 
         //item 사이에 줄 만들기
         mainRecyclerView.addItemDecoration(
@@ -79,6 +84,8 @@ class MainActivity : AppCompatActivity()  {
                 mainRecyclerView.adapter=mAdapter
                 mainRecyclerView.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                 mainRecyclerView.setHasFixedSize(true)
+
+
             }catch (e:Exception){
                 Log.d("tag", "Error - $e")
             }
@@ -90,19 +97,19 @@ class MainActivity : AppCompatActivity()  {
         //카메라, 내장공간 사용 권한
         checkPermissions()
 
+
+
         //목표 추가버튼
         goalAddbutton.setOnClickListener {
             //여기에 임시로 서버 연결 써놓음
            // LoginServer(uuid,uuid)
-            var intent= Intent(this,AddGoalActivity::class.java)
-            startActivityForResult(intent,2)
+            startActivityForResult(addIntent,2)
         }
 
 
         //setting 아이콘 클릭
         main_setting.setOnClickListener {
-            var intent=Intent(this,SettingActivity::class.java)
-            startActivityForResult(intent,2)
+            startActivityForResult(settingIntent,2)
         }
     }
 
@@ -128,11 +135,8 @@ class MainActivity : AppCompatActivity()  {
                 //TokenTon.set(response.body()?.token.toString())
                 // )
                 if(response?.isSuccessful==false){
-
                     //Toast.makeText(applicationContext,response.message(),Toast.LENGTH_LONG).show()
                 }
-
-
 
                 try{
                 mAdapter.setGoalListItems(response?.body()!!)}catch(e:Exception){
@@ -141,9 +145,27 @@ class MainActivity : AppCompatActivity()  {
                 if(response?.body() != null) {
                   //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
                     mAdapter.setGoalListItems(response.body()!!)
-
-
                 }
+                //목표 갯수
+                count=mAdapter.itemCount
+
+                //목표 없는 경우 글자 안내
+                if(count==0) {
+                    mainRecyclerView.visibility= View.GONE
+                    firstText1.visibility=View.VISIBLE
+                    firstText2.visibility=View.VISIBLE
+                    firstButton.visibility=View.VISIBLE
+                    firstButton.setOnClickListener{
+                        startActivityForResult(addIntent,2)
+                    }
+                }
+                else{
+                    mainRecyclerView.visibility= View.VISIBLE
+                    firstText1.visibility=View.GONE
+                    firstText2.visibility=View.GONE
+                    firstButton.visibility=View.GONE
+                }
+
             }
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
                 Toast.makeText(this@MainActivity,"$t",Toast.LENGTH_LONG).show()

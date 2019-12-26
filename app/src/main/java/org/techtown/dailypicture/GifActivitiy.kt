@@ -125,7 +125,7 @@ class GifActivitiy: AppCompatActivity() {
         Create a DownloadManager.Request with all the information necessary to start the download
          */
         val request =
-            DownloadManager.Request(Uri.parse("https://elasticbeanstalk-ap-northeast-2-085345381111.s3.amazonaws.com/media/video/59/3333.mp4"))
+            DownloadManager.Request(Uri.parse(str_url))
                 .setTitle("Dummy File") // Title of the Download Notification
                 .setDescription("Downloading") // Description of the Download Notification
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE) // Visibility of the download Notification
