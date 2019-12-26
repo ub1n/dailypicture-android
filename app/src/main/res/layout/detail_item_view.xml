@@ -23,6 +23,16 @@
             android:layout_height="320dp"
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/count_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="265dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_round_transparent"
+            android:padding="5dp"
+            android:textColor="#FFFFFF" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

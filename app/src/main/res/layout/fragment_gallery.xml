@@ -56,21 +56,21 @@
 
         <ImageButton
             android:id="@+id/back_button"
-            android:contentDescription="@string/back_button_alt"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="@dimen/margin_xsmall"
-            android:layout_marginTop="@dimen/margin_small"
             android:layout_width="@dimen/round_button_small"
             android:layout_height="@dimen/round_button_small"
-            android:scaleType="fitCenter"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="100dp"
             android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_back" />
+            android:contentDescription="@string/back_button_alt"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/share_button"
+            app:srcCompat="@drawable/back_white" />
 
         <ImageButton
             android:id="@+id/share_button"
-            android:layout_width="@dimen/round_button_large"
-            android:layout_height="@dimen/round_button_large"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginBottom="80dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/share_button_alt"
@@ -79,7 +79,18 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:srcCompat="@drawable/ic_downward_24dp" />
+            app:srcCompat="@drawable/check" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="오늘의 LAPSE 저장"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/share_button" />
 
         <!--<ImageButton
             android:id="@+id/delete_button"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,16 +8,9 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -33,7 +26,7 @@
                 android:layout_width="368dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:fontFamily="@font/nanum_square"
+                android:fontFamily="@font/pt_serif_bold"
                 android:gravity="center"
                 android:text="     Daily picture"
                 android:textColor="#000000"
@@ -44,14 +37,14 @@
                 android:id="@+id/main_setting"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:background="@drawable/settings"
+                android:background="@drawable/settings_2"
                 android:gravity="bottom" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp">
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -62,11 +55,50 @@
         android:id="@+id/goalAddbutton"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="false"
-        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/write_3" />
+        android:background="@drawable/write_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/firstText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="아직 목표가 없네요!"
+        android:visibility="gone"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout5" />
+
+    <TextView
+        android:id="@+id/firstText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="목표를 추가해 주세요"
+        android:visibility="gone"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstText1" />
+
+    <Button
+        android:id="@+id/firstButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/button_round_corners"
+        android:text="          목표 추가하기          "
+        android:textColor="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstText2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

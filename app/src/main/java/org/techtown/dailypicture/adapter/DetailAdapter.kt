@@ -2,13 +2,17 @@ package org.techtown.dailypicture.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.detail_item_view.*
 import kotlinx.android.synthetic.main.detail_item_view.view.*
 import org.techtown.dailypicture.PhotoDetailActivity
 import org.techtown.dailypicture.R
@@ -19,9 +23,16 @@ import org.techtown.dailypicture.testRoom.Picture
 class DetailAdapter( context: Context) :
     RecyclerView.Adapter<DetailAdapter.ViewHolder>() {
     var imageList : List<images> = listOf()
+    var res: Resources?=null
+    var text: TextView?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.detail_item_view, parent, false)
+
+        text=view.count_image_button
+        //이미지 위에 몇번째 이미지인지 표시 ex) "1/10"
+        res=parent.context.resources
+
 
         return ViewHolder(view)
     }
@@ -34,12 +45,22 @@ class DetailAdapter( context: Context) :
 
                 if (item != null) {  //main에서 사진 띄우기
                     //imageView.setImageBitmap(item.image)
+
 /*
                     val byteArray = item.image
                     val picture = BitmapFactory.decodeByteArray(byteArray, 0, byteArray!!.size)
                     imageView.setImageBitmap(picture)*/
                     val thumbnail= item.url
                     Picasso.get().load(thumbnail).into(imageView)
+                    Log.d("count",imageList.size.toString())
+                    //
+                   // var str=count_all_image
+                   // Log.d("count",str)
+                    var count_all_image=String.format(res!!.getString(R.string.count_image),(position+1).toString(),imageList.size.toString())
+                    Log.d("count2",count_all_image)
+                    text!!.setText(count_all_image)
+                    //holder.count_image_button.setText(count_all_image)
+                   // count_image_button.setText("1/2")
                 }
             }
         }

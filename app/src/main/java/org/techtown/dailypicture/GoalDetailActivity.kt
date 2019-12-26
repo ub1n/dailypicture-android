@@ -1,6 +1,7 @@
 package org.techtown.dailypicture
 
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,6 +13,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_goal_2.*
+import kotlinx.android.synthetic.main.detail_item_view.*
 import kotlinx.android.synthetic.main.goal_detail_3.*
 import org.techtown.dailypicture.Retrofit.Response.PostIdResponse
 import org.techtown.dailypicture.Retrofit.Response.PostResponse
@@ -35,6 +37,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     lateinit var mAdapter:DetailAdapter
     var goal= Goal()
     var goalname=""
+    var count_all_image:String?=null
+    var res: Resources?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -174,6 +178,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                         Toast.makeText(this@GoalDetailActivity, "$e", Toast.LENGTH_LONG).show()
                     }
                 }
+
+                //count_all_image=String.format(resources.getString(R.string.count_image),2,mAdapter.itemCount.toString())
 
             }
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
