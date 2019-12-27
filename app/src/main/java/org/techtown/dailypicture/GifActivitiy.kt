@@ -8,11 +8,15 @@ import android.content.IntentFilter
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
+import androidx.core.app.ShareCompat.IntentBuilder
+import androidx.core.content.FileProvider
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -27,6 +31,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import org.techtown.dailypicture.GifActivitiy as Gif
 
 
 class GifActivitiy: AppCompatActivity() {
@@ -37,8 +42,8 @@ class GifActivitiy: AppCompatActivity() {
     private var downloadId: Long = -1L
     private lateinit var downloadManager: DownloadManager
     private var downloadID: Long = 0
-    private lateinit var exoPlayer:ExoPlayer
-    private lateinit var context:Context
+    var goal_name:String?=null
+    var storageDir:File?=null
 
     private val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(
@@ -58,7 +63,7 @@ class GifActivitiy: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_to_gif_5)
         getVideoServer(TokenTon.postId!!)
-        var goal_name=getIntent().getStringExtra("goal_name")
+        goal_name=getIntent().getStringExtra("goal_name")
         goalText.setText(goal_name)
 
         //Log.d("str",str_url)
@@ -76,10 +81,26 @@ class GifActivitiy: AppCompatActivity() {
 
         registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         download_gif.setOnClickListener {
+            Toast.makeText(applicationContext,"다운로드를 시작합니다.",Toast.LENGTH_LONG).show()
             beginDownload()
         }
         back_gif.setOnClickListener {
             finish()
+        }
+        share_gif.setOnClickListener {
+            var uri=Uri.parse(str_url)
+            //var uriToImage=FileProvider.getUriForFile(applicationContext,FILES_AUTHORITY,)
+            var shareIntent= IntentBuilder
+                .from(this)
+                .setStream(uri)
+                .intent
+            shareIntent.setData(uri)
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            //if(shareIntent.resolveActivity(packageManager)!=null){
+                startActivity(shareIntent)
+            //}
+
         }
     }
 
@@ -104,36 +125,17 @@ class GifActivitiy: AppCompatActivity() {
         })
     }
 
-    //다운로드매니저 방법1
-    private fun downloadImage() {
-        val file = File(getExternalFilesDir(null), "dev_submit.mp4")
-        val youtubeUrl = "https://elasticbeanstalk-ap-northeast-2-085345381111.s3.amazonaws.com/media/video/59/3333.mp4"
-
-        val request = DownloadManager.Request(Uri.parse(youtubeUrl))
-            .setTitle("Downloading a video")
-            .setDescription("Downloading Dev Summit")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            .setDestinationUri(Uri.fromFile(file))
-            .setRequiresCharging(false)
-            .setAllowedOverMetered(true)
-            .setAllowedOverRoaming(true)
-
-        downloadId = downloadManager.enqueue(request)
-        Log.d("path", "path : " + file.path)
-    }
-
-    //다운로드 매니저 방법2
+    //다운로드 매니저
     private fun beginDownload() {
-        val file = File(getExternalFilesDir(null), "daily.mp4")
-        /*
-        Create a DownloadManager.Request with all the information necessary to start the download
-         */
+        //val file = File(getExternalFilesDir(null), goal_name+".mp4")
+        storageDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/DailyPicture",goal_name+".mp4")
         val request =
             DownloadManager.Request(Uri.parse(str_url))
                 .setTitle("Dummy File") // Title of the Download Notification
                 .setDescription("Downloading") // Description of the Download Notification
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE) // Visibility of the download Notification
-                .setDestinationUri(Uri.fromFile(file)) // Uri of the destination file
+                .setDestinationUri(Uri.fromFile(storageDir)) // Uri of the destination file
+                //.setDestinationInExternalFilesDir(applicationContext,storageDir,goal_name)
                 .setRequiresCharging(false) // Set if charging is required to begin the download
                 .setAllowedOverMetered(true) // Set if download is allowed on Mobile network
                 .setAllowedOverRoaming(true) // Set if download is allowed on roaming network
@@ -142,6 +144,8 @@ class GifActivitiy: AppCompatActivity() {
         downloadID =
             downloadManager.enqueue(request) // enqueue puts the download request in the queue.
     }
+
+
     private fun ServerError(){
         Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
 
@@ -151,4 +155,5 @@ class GifActivitiy: AppCompatActivity() {
         startActivityForResult(intent,2)
         finish()
     }
+
 }
