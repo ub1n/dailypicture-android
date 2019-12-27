@@ -98,7 +98,7 @@
             android:src="@drawable/download" />
 
         <ImageButton
-            android:id="@+id/upload_gif"
+            android:id="@+id/share_gif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_horizontal|center_vertical"
