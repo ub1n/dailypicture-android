@@ -45,7 +45,7 @@
         android:layout_height="55dp"
         android:layout_marginStart="45dp"
         android:layout_marginBottom="100dp"
-        android:background="@drawable/change_selfie"
+        android:background="@drawable/rotate_camera"
         android:contentDescription="@string/switch_camera_button_alt"
         android:padding="@dimen/spacing_small"
         android:scaleType="fitCenter"
@@ -104,5 +104,16 @@
         app:layout_constraintTop_toTopOf="@+id/imageViewV"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_rotate_right_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imageButtonA"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/camera_capture_button"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageViewV"
+        android:background="@drawable/ic_outer_circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

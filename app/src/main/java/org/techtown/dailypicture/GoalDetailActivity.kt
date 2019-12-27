@@ -45,11 +45,11 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goal_detail_3)
 
-        if(TokenTon.uuid==""||TokenTon.Token==""){
+        /*if(TokenTon.uuid==""||TokenTon.Token==""){
             var intent=Intent(this, LoadingActivity::class.java)
             startActivityForResult(intent,2)
             finish()
-        }
+        }*/
 
         //목표 이름 불러오기
         var goal_name=getIntent().getStringExtra("goal_name")
@@ -166,24 +166,28 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostIdResponse> {
             override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
-                //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
-                goalText.setText(response?.body()?.title)
-                goalname=response?.body()?.title.toString()
-                if(response?.body()?.images != null) {
-                    try {
-                        //imageList = response?.body()?.images!!
-                        mAdapter.setGoalListItems(response.body()?.images!!)
+                if(response?.isSuccessful==false){
 
-                    } catch (e: Exception) {
-                        Toast.makeText(this@GoalDetailActivity, "$e", Toast.LENGTH_LONG).show()
+                    ServerError()
+                }else {
+                    //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
+                    goalText.setText(response?.body()?.title)
+                    goalname = response?.body()?.title.toString()
+                    if (response?.body()?.images != null) {
+                            //imageList = response?.body()?.images!!
+                            mAdapter.setGoalListItems(response.body()?.images!!)
+
+
                     }
                 }
-
                 //count_all_image=String.format(resources.getString(R.string.count_image),2,mAdapter.itemCount.toString())
 
             }
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
-                Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
+
+                ServerError()
+                //Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
+
             }
         })
     }
@@ -192,11 +196,22 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostIdResponse> {
             override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
-
+                if(response!!.isSuccessful==false){
+                    ServerError()
+                }
             }
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
-                Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
+                ServerError()
             }
         })
+    }
+    private fun ServerError(){
+        Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
+
+        val intent=Intent(this,LoadingActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivityForResult(intent,2)
+        finish()
     }
 }

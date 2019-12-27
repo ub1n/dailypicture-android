@@ -176,9 +176,9 @@ class GalleryFragment internal constructor() : Fragment() {
             //Toast.makeText(this,"로딩중이니 기다려주세요",Toast.LENGTH_LONG).show()
             share_button.isEnabled=false
             progressBar2.visibility=View.VISIBLE
-            var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
+             var outputDirectory = CameraActivity.getOutputDirectory(requireContext())
 
-            try {
+
                 val photoFile = File(
                     outputDirectory,
                     SimpleDateFormat(
@@ -200,17 +200,15 @@ class GalleryFragment internal constructor() : Fragment() {
                     context, arrayOf(photoFile.absolutePath), arrayOf(mimeType), null
                 )
 
-            }catch(e:Exception){
-                Toast.makeText(activity?.applicationContext,"$e",Toast.LENGTH_LONG).show()
-            }
+
 
             /*var intent=Intent(activity?.applicationContext, GoalDetailActivity::class.java)
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)*/
 
-            Thread.sleep(1_500) //사진 보내질 동안 슬립
-            activity?.finish()
+            /*Thread.sleep(1_500) //사진 보내질 동안 슬립
+            activity?.finish()*/
 
             /*mediaList.getOrNull(mediaViewPager.currentItem)?.let { mediaFile ->  //추후 공유기능을 위해 주석처리
 
@@ -258,6 +256,15 @@ class GalleryFragment internal constructor() : Fragment() {
 
         }*/
     }
+    private fun ServerError(){
+        Toast.makeText(activity?.applicationContext,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
+
+        val intent=Intent(activity?.applicationContext,LoadingActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivityForResult(intent,2)
+        activity?.finish()
+    }
     private fun PostImage(file:File){
         //Retrofit 서버 연결
         //val file = File(thumbnail)
@@ -273,6 +280,10 @@ class GalleryFragment internal constructor() : Fragment() {
                 //토큰 값 받아오기
                 //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
                 //TokenTon.set(response.body()?.token.toString())
+                if(response.isSuccessful==false){
+                    ServerError()}else{
+                    activity?.finish()
+                }
             }
             override fun onFailure(call: Call<ImagePostResponse>, t: Throwable) {
             }

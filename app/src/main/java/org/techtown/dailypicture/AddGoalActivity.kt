@@ -247,13 +247,26 @@ class AddGoalActivity: AppCompatActivity() {
         //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if(response.isSuccessful==false){
+                    ServerError()
+                }
                 //토큰 값 받아오기
                 //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
                 //TokenTon.set(response.body()?.token.toString())
             }
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                ServerError()
             }
         })
+    }
+    private fun ServerError(){
+        Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
+
+        val intent=Intent(this,LoadingActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivityForResult(intent,2)
+        finish()
     }
 
 
