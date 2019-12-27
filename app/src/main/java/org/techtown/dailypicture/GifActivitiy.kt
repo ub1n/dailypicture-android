@@ -87,7 +87,7 @@ class GifActivitiy: AppCompatActivity() {
         back_gif.setOnClickListener {
             finish()
         }
-        share_gif.setOnClickListener {
+        /*share_gif.setOnClickListener {
             var uri=Uri.parse(str_url)
             //var uriToImage=FileProvider.getUriForFile(applicationContext,FILES_AUTHORITY,)
             var shareIntent= IntentBuilder
@@ -101,7 +101,7 @@ class GifActivitiy: AppCompatActivity() {
                 startActivity(shareIntent)
             //}
 
-        }
+        }*/
     }
 
 
