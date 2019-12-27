@@ -90,12 +90,16 @@ class GifActivitiy: AppCompatActivity() {
 
         call.enqueue(object : Callback<VideoResponse> {
             override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
+                if(response.isSuccessful==false){
+                    ServerError()
+                }else{
                 str_url=response.body()?.video_url.toString()
                 TokenTon.setvideoPath(str_url!!)
                 videoView.setVideoURI(Uri.parse(str_url))
-                videoView.start()
+                videoView.start()}
             }
             override fun onFailure(call: Call<VideoResponse>, t: Throwable) {
+                ServerError()
             }
         })
     }
@@ -137,5 +141,14 @@ class GifActivitiy: AppCompatActivity() {
             getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request) // enqueue puts the download request in the queue.
+    }
+    private fun ServerError(){
+        Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
+
+        val intent=Intent(this,LoadingActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivityForResult(intent,2)
+        finish()
     }
 }

@@ -21,25 +21,31 @@ class LoadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
+        var uuid = intent.getStringExtra("uuid")
+        if(uuid==null){
+            uuid=TokenTon.uuid
+        }
+        val status = intent.getIntExtra("status", 0)
+        //  TokenTon.setuuid(uuid)     //얘 쓰면 최초실행시 토큰값이상해짐
+        if (uuid != "" && uuid != null) {
 
-        val uuid=intent.getStringExtra("uuid")
-        val status=intent.getIntExtra("status",0)
-      //  TokenTon.setuuid(uuid)     //얘 쓰면 최초실행시 토큰값이상해짐
-        if(uuid!=""&&uuid!=null){
             TokenTon.setuuid(uuid)
         }
-        //Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
-        if(status==0){
-        LoginServer(uuid,uuid)}
+            //Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
+        if (status == 0) {
+            LoginServer(uuid, uuid)
+        }
 
         //RegisterServer(uuid,uuid)
-        Handler().postDelayed({
+        /*Handler().postDelayed({
             val intent= Intent(this,MainActivity::class.java)
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
             finish()
-        },DURATION)
+        },DURATION)*/
+
+
     }
     private fun LoginServer(username:String,password:String){
         //Retrofit 서버 연결
@@ -50,14 +56,29 @@ class LoadingActivity : AppCompatActivity() {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 //토큰 값 받아오기
                 //Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
-                TokenTon.set(response.body()?.token.toString())
+                if(response.isSuccessful) {
 
+                    TokenTon.set(response.body()?.token.toString())
+                    success()
+                }
                 //PostGetServer()
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-
+                ServerError()
             }
         })
+    }
+    private fun ServerError(){
+        Toast.makeText(this,"서버와의 연결이 종료되었습니다. 연결 상태를 확인해주세요",Toast.LENGTH_LONG).show()
+    }
+    private fun success(){
+        Handler().postDelayed({
+            val intent= Intent(this,MainActivity::class.java)
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+            finish()
+        },DURATION)
     }
 
 

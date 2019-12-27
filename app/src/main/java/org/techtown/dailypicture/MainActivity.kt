@@ -135,40 +135,42 @@ class MainActivity : AppCompatActivity()  {
                 //TokenTon.set(response.body()?.token.toString())
                 // )
                 if(response?.isSuccessful==false){
+                    ServerError()
                     //Toast.makeText(applicationContext,response.message(),Toast.LENGTH_LONG).show()
-                }
+                }else {
 
-                try{
-                mAdapter.setGoalListItems(response?.body()!!)}catch(e:Exception){
-                //    Toast.makeText(this@MainActivity,"$e",Toast.LENGTH_LONG).show()
-                }
-                if(response?.body() != null) {
-                  //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
-                    mAdapter.setGoalListItems(response.body()!!)
-                }
-                //목표 갯수
-                count=mAdapter.itemCount
+                    try {
+                        mAdapter.setGoalListItems(response?.body()!!)
+                    } catch (e: Exception) {
+                        //    Toast.makeText(this@MainActivity,"$e",Toast.LENGTH_LONG).show()
+                    }
+                    if (response?.body() != null) {
+                        //  Toast.makeText(this@MainActivity,response.body()!![0].title,Toast.LENGTH_LONG).show()
+                        mAdapter.setGoalListItems(response.body()!!)
+                    }
+                    //목표 갯수
+                    count = mAdapter.itemCount
 
-                //목표 없는 경우 글자 안내
-                if(count==0) {
-                    mainRecyclerView.visibility= View.GONE
-                    firstText1.visibility=View.VISIBLE
-                    firstText2.visibility=View.VISIBLE
-                    firstButton.visibility=View.VISIBLE
-                    firstButton.setOnClickListener{
-                        startActivityForResult(addIntent,2)
+                    //목표 없는 경우 글자 안내
+                    if (count == 0) {
+                        mainRecyclerView.visibility = View.GONE
+                        firstText1.visibility = View.VISIBLE
+                        firstText2.visibility = View.VISIBLE
+                        firstButton.visibility = View.VISIBLE
+                        firstButton.setOnClickListener {
+                            startActivityForResult(addIntent, 2)
+                        }
+                    } else {
+                        mainRecyclerView.visibility = View.VISIBLE
+                        firstText1.visibility = View.GONE
+                        firstText2.visibility = View.GONE
+                        firstButton.visibility = View.GONE
                     }
                 }
-                else{
-                    mainRecyclerView.visibility= View.VISIBLE
-                    firstText1.visibility=View.GONE
-                    firstText2.visibility=View.GONE
-                    firstButton.visibility=View.GONE
-                }
-
             }
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
-                Toast.makeText(this@MainActivity,"$t",Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@MainActivity,"$t",Toast.LENGTH_LONG).show()
+                ServerError()
             }
         })
     }
@@ -225,16 +227,26 @@ class MainActivity : AppCompatActivity()  {
         //val intent = Intent(this, MainActivity::class.java)
         call.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    if(response.isSuccessful==false){
+                        ServerError()
+                    }
+                    //토큰 값 받아오기
+                    //Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
+                    TokenTon.set(response.body()?.token.toString())
+                    //PostGetServer()
 
-                //토큰 값 받아오기
-                //Toast.makeText(this@MainActivity,response.body()?.token.toString(),Toast.LENGTH_LONG).show()
-                TokenTon.set(response.body()?.token.toString())
-                //PostGetServer()
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-
+                ServerError()
             }
         })
+    }
+    private fun ServerError(){
+        Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다.",Toast.LENGTH_LONG).show()
+        val intent=Intent(this@MainActivity,LoadingActivity::class.java)
+       /* intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)*/
+        startActivity(intent)
     }
 
 }
