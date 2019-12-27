@@ -40,7 +40,14 @@ class LoadingActivity : AppCompatActivity() {
         if (status == 0) {
             LoginServer(uuid, uuid)
         }else{
-        LoginServer(TokenTon.uuid,TokenTon.uuid)}
+            Handler().postDelayed({
+                val intent= Intent(this,MainActivity::class.java)
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                startActivity(intent)
+                finish()
+            },DURATION)}
+        //LoginServer(TokenTon.uuid,TokenTon.uuid)}
 
         //RegisterServer(uuid,uuid)
         /*Handler().postDelayed({
