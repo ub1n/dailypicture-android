@@ -160,6 +160,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             Toast.makeText(this,"non-save",Toast.LENGTH_LONG).show()
         }
     }*/
+    var code:Int=3
     private fun PostIdGetServer(){
         //Retrofit 서버 연결
         val call= RetrofitGenerator.create().postIdPost("Token "+TokenTon.Token,TokenTon.postId)
@@ -167,8 +168,9 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         call.enqueue(object : Callback<PostIdResponse> {
             override fun onResponse(call: Call<PostIdResponse>?, response: Response<PostIdResponse>?) {
                 if(response?.isSuccessful==false){
-
-                    ServerError()
+                    if(response?.code()==404){
+                        code=404}else{
+                    ServerError()}
                 }else {
                     //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
                     goalText.setText(response?.body()?.title)
@@ -184,8 +186,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
             }
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
-
-                ServerError()
+                if(code!=404){
+                ServerError()}
                 //Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
 
             }

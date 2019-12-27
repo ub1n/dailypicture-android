@@ -90,11 +90,11 @@ class AddGoalActivity: AppCompatActivity() {
                     Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
                     Log.d("error",e.toString())
                 }
-                Thread.sleep(1_500) //서버에 등록되는 시간동안 대기
-                var intent = Intent(this, MainActivity::class.java)
+               // Thread.sleep(1_500) //서버에 등록되는 시간동안 대기
+                /*var intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                this.finish()
+                this.finish()*/
 
                 //PostServer(goal_input_add.text.toString(),thumbnail,true);
             }
@@ -249,6 +249,8 @@ class AddGoalActivity: AppCompatActivity() {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if(response.isSuccessful==false){
                     ServerError()
+                }else{
+                    success()
                 }
                 //토큰 값 받아오기
                 //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
@@ -267,6 +269,12 @@ class AddGoalActivity: AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivityForResult(intent,2)
         finish()
+    }
+    private fun success(){
+        var intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        this.finish()
     }
 
 

@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity()  {
     var count:Int?=null     //목표 갯수 세는변수. 갯수에 따라서 xml 달라짐
     var addIntent:Intent?=null
     var settingIntent:Intent?=null
-
+    var code:Int=3
 
 
     //권한 요청을 위한 변수
@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity()  {
 
         if(TokenTon.uuid !=null && TokenTon.uuid !="") {
             if(TokenTon.Token==""||TokenTon.Token==null){
+                code=200
                 LoginServer(TokenTon.uuid, TokenTon.uuid)
             }
         }
@@ -135,7 +136,8 @@ class MainActivity : AppCompatActivity()  {
                 //TokenTon.set(response.body()?.token.toString())
                 // )
                 if(response?.isSuccessful==false){
-                    ServerError()
+                    if(code!=200){
+                    ServerError()}
                     //Toast.makeText(applicationContext,response.message(),Toast.LENGTH_LONG).show()
                 }else {
 
@@ -170,7 +172,8 @@ class MainActivity : AppCompatActivity()  {
             }
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
                 //Toast.makeText(this@MainActivity,"$t",Toast.LENGTH_LONG).show()
-                ServerError()
+                if(code!=200){
+                ServerError()}
             }
         })
     }

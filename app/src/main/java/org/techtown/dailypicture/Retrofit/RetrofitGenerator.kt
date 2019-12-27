@@ -28,7 +28,7 @@ object RetrofitGenerator {
     private val retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("http://lkho.iptime.org:8888/")
+            .baseUrl("http://dailypicture-cname.ap-northeast-2.elasticbeanstalk.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     /*private val retrofit =
