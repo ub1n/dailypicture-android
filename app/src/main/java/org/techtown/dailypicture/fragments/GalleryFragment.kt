@@ -272,7 +272,7 @@ class GalleryFragment internal constructor() : Fragment() {
         val part = MultipartBody.Part.createFormData("url", file.name, fileReqBody)
         val titleRequest=RequestBody.create(MediaType.parse("multipart/form-data"),TokenTon.postId.toString())
 
-        val call= RetrofitGenerator.create().imagePost( titleRequest,part,"Token "+ TokenTon.Token,TokenTon.postId)
+        val call= RetrofitGenerator.create().imagePost( titleRequest,part,"Token "+ TokenTon.Token)
 
         call.enqueue(object : Callback<ImagePostResponse> {
             override fun onResponse(call: Call<ImagePostResponse>, response: Response<ImagePostResponse>) {

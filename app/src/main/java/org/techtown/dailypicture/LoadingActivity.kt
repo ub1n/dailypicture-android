@@ -1,5 +1,6 @@
 package org.techtown.dailypicture
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,19 +23,24 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
         var uuid = intent.getStringExtra("uuid")
-        if(uuid==null){
-            uuid=TokenTon.uuid
-        }
+
         val status = intent.getIntExtra("status", 0)
+        if(uuid==null&&status==0){
+            //uuid=TokenTon.uuid
+            val uuidSP=getSharedPreferences("uuid", Context.MODE_PRIVATE)
+            val getuuid=uuidSP.getString("uuid","")
+            uuid=getuuid
+        }
         //  TokenTon.setuuid(uuid)     //얘 쓰면 최초실행시 토큰값이상해짐
         if (uuid != "" && uuid != null) {
 
             TokenTon.setuuid(uuid)
         }
-            //Toast.makeText(this,TokenTon.uuid,Toast.LENGTH_LONG).show()
+
         if (status == 0) {
             LoginServer(uuid, uuid)
-        }
+        }else{
+        LoginServer(TokenTon.uuid,TokenTon.uuid)}
 
         //RegisterServer(uuid,uuid)
         /*Handler().postDelayed({
@@ -60,6 +66,8 @@ class LoadingActivity : AppCompatActivity() {
 
                     TokenTon.set(response.body()?.token.toString())
                     success()
+                }else{
+                    ServerError()
                 }
                 //PostGetServer()
             }

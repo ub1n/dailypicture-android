@@ -119,6 +119,7 @@ class StartAppActivity : AppCompatActivity() {
                             RegisterServer(uuid,uuid)
                             uuidEditor.putString("uuid",uuid)
                             uuidEditor.commit()
+
                             //user.uuid=uuid
                             //val database:UserDatabase=UserDatabase.getInstance(applicationContext)
                             //val userDao: UserDao =database.userDao

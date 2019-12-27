@@ -25,7 +25,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:background="@drawable/left"
+            android:background="@drawable/ic_switch"
             android:padding="8dp" />
 
         <TextView
