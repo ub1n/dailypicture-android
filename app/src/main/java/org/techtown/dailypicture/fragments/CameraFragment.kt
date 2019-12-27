@@ -36,6 +36,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.print.PrintAttributes
 import android.util.DisplayMetrics
 import android.util.Log
@@ -276,7 +277,8 @@ class CameraFragment : Fragment() {
         val width2=viewFinder.layoutParams.width
         viewFinder.layoutParams.height=1080  // 이 값 조절하면 화면크기 조절 될듯
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
-        ImageTon.set()
+        if(CameraX.LensFacing.BACK == lensFacing){
+        ImageTon.set()}
         // 주요 활동에서 이벤트를 수신 할 인 텐트 필터 설정
         val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
         broadcastManager.registerReceiver(volumeDownReceiver, filter)
@@ -452,6 +454,13 @@ class CameraFragment : Fragment() {
                     val point = factory.createPoint(event!!.x, event!!.y)
                     val action = FocusMeteringAction.Builder.from(point).build()
                     cameraControl.startFocusAndMetering(action)
+                    imageButtonA.setX(event.x-100)
+                    imageButtonA.setY(event.y-100)
+                    imageButtonA.visibility=View.VISIBLE
+                    Handler().postDelayed({
+                        imageButtonA.visibility=View.GONE
+                    },300)
+
 
                     return true
                 }

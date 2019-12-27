@@ -119,13 +119,23 @@ class PhotoDetailActivity : AppCompatActivity() {
                 call: Call<PostIdResponse>?,
                 response: Response<PostIdResponse>?
             ) {
-
+                if(response?.isSuccessful==false)
+                    ServerError()
             }
 
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
-
+                ServerError()
             }
         })
+    }
+    private fun ServerError(){
+        Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
+
+        val intent=Intent(this,LoadingActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivityForResult(intent,2)
+        finish()
     }
 
     //갤러리 사진 저장
