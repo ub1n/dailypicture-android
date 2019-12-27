@@ -36,10 +36,15 @@ interface RetrofitService {
     @GET("/posts/")
     fun getPost(@Header("Authorization")authorization:String):Call<List<PostResponse>>
 
-    @Headers("Accept:application/json")
+    /*@Headers("Accept:application/json")
     @Multipart
     @POST("/images/{post_id}/list")
     fun imagePost(@Part("post_id") post_id:RequestBody,@Part url:MultipartBody.Part,@Header("Authorization")authorization:String,@Path("post_id") postid:Int?):Call<ImagePostResponse>
+*/
+    @Headers("Accept:application/json")
+    @Multipart
+    @POST("/images/create")
+    fun imagePost(@Part("post") post:RequestBody,@Part url:MultipartBody.Part,@Header("Authorization")authorization:String):Call<ImagePostResponse>
 
 
     @Headers("Accept:application/json")

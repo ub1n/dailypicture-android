@@ -95,7 +95,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         }
         //내보내기 버튼
         gifbutton.setOnClickListener {
-            if(mAdapter.itemCount<3){ //여기 카운트 갯수 바꾸면 사진갯수 조절
+            if(mAdapter.itemCount<20){ //여기 카운트 갯수 바꾸면 사진갯수 조절
                 Toast.makeText(this,"사진 20장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
                 //Toast.makeText(this,"사진의 수가 적습니다. 사진을 20장 이상 찍어주세요",Toast.LENGTH_LONG).show()
             }else{
