@@ -49,6 +49,7 @@ class AddGoalActivity: AppCompatActivity() {
     var PIC_CROP:Int=3;
     var PICK_IMAGE_REQUEST:Int=2;
     var picUri:Uri?=null
+    var imgStatus:Boolean=false
 
 
 
@@ -68,12 +69,16 @@ class AddGoalActivity: AppCompatActivity() {
 
         //목표 등록 확인 버튼
         button_add.setOnClickListener {
-            if(goal_input_add.length()==0){
+            if(goal_input_add.length()==0) {
                 Toast.makeText(applicationContext,"목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
-            }else {
+            }else if(imgStatus==false){
+                Toast.makeText(applicationContext,"이미지를 추가해주세요", Toast.LENGTH_LONG).show()
+
+            }
+            else {
                 //Toast.makeText(applicationContext,"로딩중이니 기다려주세요",Toast.LENGTH_LONG).show()
 
-                button_add.isEnabled=false
+                //button_add.isEnabled=false
                 /*Room 사용시 코드
                 goal.goal_name=goal_input_add.text.toString()
                 val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
@@ -168,6 +173,7 @@ class AddGoalActivity: AppCompatActivity() {
             cropIntent.putExtra("return-data", true)
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP)
+            imgStatus=true
         }
         catch (anfe:ActivityNotFoundException) {
             val errorMessage = "크롭 할 수 없는 이미지 입니다."
@@ -248,8 +254,13 @@ class AddGoalActivity: AppCompatActivity() {
         call.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if(response.isSuccessful==false){
-                    ServerError()
+                    if(response.code()==400){
+                        msgError()
+                        //ServerError()
+                    }else{
+                    ServerError()}
                 }else{
+                    button_add.isEnabled=false
                     success()
                 }
                 //토큰 값 받아오기
@@ -261,7 +272,11 @@ class AddGoalActivity: AppCompatActivity() {
             }
         })
     }
+    private fun msgError(){
+        Toast.makeText(this,"공백이 아닌 글자를 넣어주세요",Toast.LENGTH_LONG).show()
+    }
     private fun ServerError(){
+
         Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
 
         val intent=Intent(this,LoadingActivity::class.java)
