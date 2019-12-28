@@ -9,12 +9,14 @@
     android:orientation="vertical"
     tools:context=".GifActivitiy">
 
+
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:elevation="50dp"
+        android:elevation="30dp"
         android:orientation="horizontal"
         android:padding="18dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +62,6 @@
         android:layout_height="0dp"
         android:layout_marginTop="50dp"
         android:orientation="horizontal"
-        android:padding="20dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -78,44 +79,36 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:padding="20dp"
+    <ImageButton
+        android:id="@+id/download_gif"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="36dp"
+        android:background="#00FAF8F8"
+        android:scaleType="centerCrop"
+        android:src="@drawable/download"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.452" />
 
-        <ImageButton
-            android:id="@+id/download_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00FAF8F8"
-            android:padding="20dp"
-            android:src="@drawable/download" />
-
-        <ImageButton
-            android:id="@+id/share_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_horizontal|center_vertical"
-            android:layout_marginLeft="75dp"
-            android:layout_marginRight="70dp"
-            android:background="#00FAF8F8"
-            android:padding="20dp"
-            android:src="@drawable/share" />
-
-        <ImageButton
-            android:id="@+id/back_gif"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#00FAF8F8"
-            android:padding="20dp"
-            android:src="@drawable/left" />
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/back_gif"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="60dp"
+        android:background="#00FAF8F8"
+        android:padding="7dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/back_3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/download_gif"
+        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.558" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -125,5 +118,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:text="뒤로"
+        android:textColor="#3D3B3B"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/download_gif"
+        app:layout_constraintHorizontal_bias="0.456"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_gif" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="영상 저장하기"
+        android:textColor="#3D3B3B"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/download_gif" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

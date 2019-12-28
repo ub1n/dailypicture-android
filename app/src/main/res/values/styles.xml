@@ -16,7 +16,7 @@
     </style>
 
     <style name="TextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">
-        <item name="android:fontFamily">@font/nanum_square</item>
+        <item name="android:fontFamily">@font/nanum_gothic</item>
     </style>
 
     <style name="ButtonStyle" parent="@android:style/Widget.DeviceDefault.Button.Borderless">

@@ -69,12 +69,6 @@ class MainActivity : AppCompatActivity()  {
         mAdapter= MainAdapter(applicationContext)
 
 
-
-        //item 사이에 줄 만들기
-        mainRecyclerView.addItemDecoration(
-            DividerItemDecoration(this,DividerItemDecoration.VERTICAL)
-        )
-
         PostGetServer()
         val r= Runnable {
             try{
