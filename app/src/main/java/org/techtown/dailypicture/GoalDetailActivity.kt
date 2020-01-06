@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -39,6 +40,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     var goalname=""
     var count_all_image:String?=null
     var res: Resources?=null
+    var count:Int?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,8 +180,19 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                     if (response?.body()?.images != null) {
                             //imageList = response?.body()?.images!!
                             mAdapter.setGoalListItems(response.body()?.images!!)
-
-
+                    }
+                    count = mAdapter.itemCount
+                    //사진 없으면 안내 글자 보이기
+                    if(count==0){
+                        detailRecyclerView.visibility= View.GONE
+                        textView18.visibility=View.VISIBLE
+                        textView19.visibility=View.VISIBLE
+                        textView20.visibility=View.VISIBLE
+                    }else{
+                        detailRecyclerView.visibility= View.VISIBLE
+                        textView18.visibility=View.GONE
+                        textView19.visibility=View.GONE
+                        textView20.visibility=View.GONE
                     }
                 }
                 //count_all_image=String.format(resources.getString(R.string.count_image),2,mAdapter.itemCount.toString())

@@ -79,7 +79,7 @@ class GifActivitiy: AppCompatActivity() {
 
         })
 
-        registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        registerReceiver(onDownloadComplete(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         download_gif.setOnClickListener {
             Toast.makeText(applicationContext,"다운로드를 시작합니다.",Toast.LENGTH_LONG).show()
             beginDownload()
@@ -131,8 +131,8 @@ class GifActivitiy: AppCompatActivity() {
         storageDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/DailyPicture",goal_name+".mp4")
         val request =
             DownloadManager.Request(Uri.parse(str_url))
-                .setTitle("Dummy File") // Title of the Download Notification
-                .setDescription("Downloading") // Description of the Download Notification
+                .setTitle("DailyPicture") // Title of the Download Notification
+                .setDescription("다운로드중") // Description of the Download Notification
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE) // Visibility of the download Notification
                 .setDestinationUri(Uri.fromFile(storageDir)) // Uri of the destination file
                 //.setDestinationInExternalFilesDir(applicationContext,storageDir,goal_name)
@@ -143,6 +143,22 @@ class GifActivitiy: AppCompatActivity() {
             getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request) // enqueue puts the download request in the queue.
+    }
+
+
+    private fun onDownloadComplete() = object:BroadcastReceiver() {
+        override fun onReceive(context:Context, intent:Intent) {
+            //Fetching the download id received with the broadcast
+            val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+            //Checking if the received broadcast is for our enqueued download by matching download id
+            if (downloadID === id)
+            {
+                DownloadToast()
+            }
+        }
+    }
+    private fun DownloadToast(){
+        Toast.makeText(this,"다운로드가 완료되었습니다.",Toast.LENGTH_LONG).show()
     }
 
 
