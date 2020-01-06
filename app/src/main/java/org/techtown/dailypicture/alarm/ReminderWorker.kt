@@ -9,8 +9,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import androidx.work.*
+//import androidx.work.*
 import kotlinx.coroutines.coroutineScope
 import org.techtown.dailypicture.MainActivity
+import org.techtown.dailypicture.R
 import java.net.SocketException
 import java.time.Duration
 import java.time.LocalDateTime
@@ -18,7 +20,8 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 
-class ReminderWorker(appContext: Context,workerParams: WorkerParameters):CoroutineWorker(appContext,workerParams) {
+class ReminderWorker(appContext: Context,workerParams: WorkerParameters):
+    CoroutineWorker(appContext,workerParams) {
     lateinit var notificationManager:NotificationManager
     lateinit var notificationChannel:NotificationChannel
     lateinit var builder: Notification.Builder
@@ -30,7 +33,7 @@ class ReminderWorker(appContext: Context,workerParams: WorkerParameters):Corouti
         private const val PARAM_NAME="name"
 
         fun runAt(){
-            val workManager=WorkManager.getInstance()
+            val workManager= WorkManager.getInstance()
 
             //API 레벨 26이상을 요구. app수준의 gradle에서 변경함
             //저녁 6시로 설정
@@ -74,13 +77,18 @@ class ReminderWorker(appContext: Context,workerParams: WorkerParameters):Corouti
             notificationChannel.lightColor= Color.GREEN
             notificationChannel.enableVibration(true)
             notificationManager.createNotificationChannel(notificationChannel)
-            Log.d("Sample", "SimpleWorker Working...")
             val intent= Intent(applicationContext, MainActivity::class.java)
             val pendingIntent= PendingIntent.getActivity(applicationContext,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
 
 
             builder=
-                Notification.Builder(applicationContext,channelId).setContentTitle("Daily Picture").setContentText("아직 오늘의 사진을 안찍으셨다면 사진을 남겨주세요").setSmallIcon(R.drawable.notification_icon_background).setContentIntent(pendingIntent).setAutoCancel(true)
+                Notification.Builder(applicationContext,channelId)
+                    //.setContentTitle("Daily Picture")
+                    .setContentText("아직 오늘의 사진을 안찍으셨다면 사진을 남겨주세요")
+                    .setSmallIcon(R.drawable.icon2)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setColor(Color.parseColor("#956133"))
             notificationManager.notify(1234,builder.build())
             Result.success()
         }

@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.settings.*
 import org.techtown.dailypicture.alarm.ReminderWorker
@@ -13,6 +14,7 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
+        //들어갈때 기본으로 on되도록
 
         //알람 상태 유지
         val alarm=getSharedPreferences("alarm",Context.MODE_PRIVATE)
@@ -45,6 +47,7 @@ class SettingActivity : AppCompatActivity() {
         switch1.setOnCheckedChangeListener{buttonView,isChecked ->
             if(isChecked){
                 //on_off.setText("ON")
+                Toast.makeText(this,"알림이 설정됩니다.",Toast.LENGTH_LONG).show()
                 alarmEditor.putString("alarm","alarm_on")
                 alarmEditor.commit()
                 //알람 켜기
@@ -52,6 +55,7 @@ class SettingActivity : AppCompatActivity() {
             }
             else{
                 //on_off.setText("OFF")
+                Toast.makeText(this,"알림이 해제되었습니다.",Toast.LENGTH_LONG).show()
                 alarmEditor.putString("alarm","alarm_off")
                 alarmEditor.commit()
                 //알람 끄기
