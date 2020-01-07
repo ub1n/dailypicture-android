@@ -52,8 +52,9 @@
             android:layout_alignTop="@+id/goal_imageView"
             android:layout_alignRight="@+id/goal_imageView"
             android:layout_alignBottom="@+id/goal_imageView"
-            android:layout_marginLeft="345dp"
+            android:layout_marginLeft="300dp"
             android:layout_marginTop="98dp"
+
             android:background="@drawable/right_2"
             android:fontFamily="@font/nanum_square"
             android:gravity="center|right"

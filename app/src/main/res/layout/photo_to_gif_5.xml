@@ -81,8 +81,8 @@
 
     <ImageButton
         android:id="@+id/download_gif"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginTop="36dp"
         android:background="#00FAF8F8"
         android:scaleType="centerCrop"

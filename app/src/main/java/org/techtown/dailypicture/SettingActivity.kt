@@ -40,6 +40,11 @@ class SettingActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        textView21.setOnClickListener{
+            var intent=Intent(this,Activity_info::class.java)
+            intent.putExtra("number",2)
+            startActivity(intent)
+        }
         val deviceWidth = resources.displayMetrics.widthPixels
         setting_back.setWidth(deviceWidth)
 
