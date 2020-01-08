@@ -24,10 +24,9 @@ class StartAppActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_app)
         var check=intent.getIntExtra("check",0)
-        if(check==0){
-            var intent=Intent(this,Activity_info::class.java)
-            startActivity(intent)
-        }
+        /*if(check==0){
+
+        }*/
         var terms_agree_3: Int = 0 //전체 동의
 
         //글씨 밑에 밑줄
@@ -57,6 +56,8 @@ class StartAppActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
+            var intent=Intent(this,Activity_info::class.java)
+            startActivity(intent)
             //전체동의 체크박스
             checkBox3.setOnClickListener(View.OnClickListener {
                 terms_agree_3 = 1

@@ -101,14 +101,14 @@
         android:layout_weight="2"
         android:fontFamily="@font/nanum_gothic"
         android:paddingLeft="15dp"
-        android:text="앱 사용법 보기"
+        android:text=" 앱 사용법 보기"
         android:textColor="#000000"
         android:textSize="19sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView17"
-        app:layout_constraintVertical_bias="0.028" />
+        app:layout_constraintVertical_bias="0.03" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
