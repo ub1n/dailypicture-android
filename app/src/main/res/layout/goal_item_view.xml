@@ -10,7 +10,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="230dp"
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,9 +52,8 @@
             android:layout_alignTop="@+id/goal_imageView"
             android:layout_alignRight="@+id/goal_imageView"
             android:layout_alignBottom="@+id/goal_imageView"
-            android:layout_marginLeft="300dp"
             android:layout_marginTop="98dp"
-
+            android:layout_marginLeft="300dp"
             android:background="@drawable/right_2"
             android:fontFamily="@font/nanum_square"
             android:gravity="center|right"

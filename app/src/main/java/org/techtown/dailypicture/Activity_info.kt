@@ -54,7 +54,7 @@ class Activity_info : AppCompatActivity() {
     }
 
     class pageadapter(num:Int):PagerAdapter(){
-        val images= intArrayOf(R.drawable.sample___1,R.drawable.sample___2,R.drawable.sample___3,R.drawable.sample___4)
+        val images= intArrayOf(R.drawable.sample__1,R.drawable.sample__2,R.drawable.sample__3,R.drawable.sample__4)
         val numb=num
         override fun getCount(): Int {
             return images.size
@@ -69,7 +69,7 @@ class Activity_info : AppCompatActivity() {
             val view = inflater.inflate(R.layout.info_slider, container, false)
 
             view.info_imageView.setImageResource(images[position])
-            view.count_button.text="${position+1}/4"
+            view.count_button.text="  ${position+1} / 4  "
 /*            view.info_back2.setOnClickListener{
                 if(numb==2){
                     val intent= Intent(view.context,SettingActivity::class.java)
