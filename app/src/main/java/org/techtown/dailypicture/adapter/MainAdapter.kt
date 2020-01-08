@@ -37,7 +37,6 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
         val view = LayoutInflater.from(parent.context).inflate(R.layout.goal_item_view, parent, false)
         //이미지 위에 어둡게 씌우는 것
         view.goal_imageView.setColorFilter(Color.parseColor("#882C2C2C"))
-
         return ViewHolder(view)
     }
 

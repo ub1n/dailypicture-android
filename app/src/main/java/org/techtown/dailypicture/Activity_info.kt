@@ -18,11 +18,31 @@ class Activity_info : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
         var num=intent.getIntExtra("number",0)
+
+
         try{
         val adapter=pageadapter(num)
         viewpager.adapter=adapter}catch(e:Exception){
             Toast.makeText(this,"$e",Toast.LENGTH_LONG).show()
         }
+
+        info_back.setOnClickListener {
+            if (num == 2) {
+                /*val intent = Intent(this, SettingActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)*/
+                finish()
+            } else {
+                /*val intent = Intent(this, StartAppActivity::class.java)
+                intent.putExtra("check", 2)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)*/
+                finish()
+            }
+        }
+
 
     }
     fun cancel2(){
@@ -34,7 +54,7 @@ class Activity_info : AppCompatActivity() {
     }
 
     class pageadapter(num:Int):PagerAdapter(){
-        val images= intArrayOf(R.drawable.sample_1,R.drawable.sample_2,R.drawable.sample_3,R.drawable.sample_4)
+        val images= intArrayOf(R.drawable.sample___1,R.drawable.sample___2,R.drawable.sample___3,R.drawable.sample___4)
         val numb=num
         override fun getCount(): Int {
             return images.size
@@ -50,7 +70,7 @@ class Activity_info : AppCompatActivity() {
 
             view.info_imageView.setImageResource(images[position])
             view.count_button.text="${position+1}/4"
-            view.info_back2.setOnClickListener{
+/*            view.info_back2.setOnClickListener{
                 if(numb==2){
                     val intent= Intent(view.context,SettingActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -63,11 +83,8 @@ class Activity_info : AppCompatActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     view.context.startActivity(intent)
                 }
+            }*/
 
-
-
-
-            }
             container.addView(view)
             return view
         }
