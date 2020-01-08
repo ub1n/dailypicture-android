@@ -241,8 +241,8 @@ class MainActivity : AppCompatActivity()  {
     private fun ServerError(){
         Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다.",Toast.LENGTH_LONG).show()
         val intent=Intent(this@MainActivity,LoadingActivity::class.java)
-       /* intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)*/
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
