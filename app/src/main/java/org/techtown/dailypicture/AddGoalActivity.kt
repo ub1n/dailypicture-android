@@ -57,6 +57,8 @@ class AddGoalActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_goal_2)
 
+        Toast.makeText(this,""+TokenTon.Token,Toast.LENGTH_LONG).show()
+
         //뒤로가기 버튼
         goal_back.setOnClickListener {
             var intent= Intent(this,MainActivity::class.java)
