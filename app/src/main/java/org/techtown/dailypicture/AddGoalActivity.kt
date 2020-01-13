@@ -57,7 +57,7 @@ class AddGoalActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_goal_2)
 
-        Toast.makeText(this,""+TokenTon.Token,Toast.LENGTH_LONG).show()
+        //Toast.makeText(this,""+TokenTon.Token,Toast.LENGTH_LONG).show()
 
         //뒤로가기 버튼
         goal_back.setOnClickListener {
@@ -249,7 +249,7 @@ class AddGoalActivity: AppCompatActivity() {
         val part = MultipartBody.Part.createFormData("thumbnail", file.name, fileReqBody)
 
         val titleRequest=RequestBody.create(MediaType.parse("multipart/form-data"),title)
-
+        //Toast.makeText(this,TokenTon.Token,Toast.LENGTH_LONG).show()
         //val postRequest=PostRequest(title,thumbnail,true)
         val call=RetrofitGenerator.create().registerPost(titleRequest,part,"Token "+TokenTon.Token)
         //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
