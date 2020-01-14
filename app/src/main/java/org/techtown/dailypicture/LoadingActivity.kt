@@ -30,7 +30,9 @@ class LoadingActivity : AppCompatActivity() {
             val uuidSP=getSharedPreferences("uuid", Context.MODE_PRIVATE)
             val getuuid=uuidSP.getString("uuid","")
             uuid=getuuid
+
         }
+
         //  TokenTon.setuuid(uuid)     //얘 쓰면 최초실행시 토큰값이상해짐
         if (uuid != "" && uuid != null) {
 

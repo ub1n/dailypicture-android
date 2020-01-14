@@ -46,17 +46,18 @@
 
         <TextView
             android:id="@+id/goal_arrow"
-            android:layout_width="12dp"
-            android:layout_height="23dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/goal_imageView"
             android:layout_alignTop="@+id/goal_imageView"
             android:layout_alignRight="@+id/goal_imageView"
             android:layout_alignBottom="@+id/goal_imageView"
-            android:layout_marginTop="98dp"
-            android:layout_marginLeft="300dp"
-            android:background="@drawable/right_2"
+            android:layout_margin="1dp"
             android:fontFamily="@font/nanum_square"
             android:gravity="center|right"
+            android:paddingTop="90dp"
+            android:paddingRight="10dp"
+            android:text=">"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
