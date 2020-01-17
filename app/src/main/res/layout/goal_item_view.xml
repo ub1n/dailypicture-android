@@ -42,7 +42,7 @@
             android:text="Hello"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/goal_arrow"
@@ -60,6 +60,23 @@
             android:text=">"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/goal_imageView_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/goal_imageView"
+            android:layout_alignTop="@+id/goal_imageView"
+            android:layout_alignRight="@+id/goal_imageView"
+            android:layout_alignBottom="@+id/goal_imageView"
+            android:layout_margin="1dp"
+            android:fontFamily="@font/pt_serif_bold"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingTop="150dp"
+            android:text="Hello"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 

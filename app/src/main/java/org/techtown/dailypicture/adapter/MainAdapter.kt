@@ -61,6 +61,8 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
                     Picasso.get().load(thumbnail).into(goal_imageView)
                     //item 위에 글자쓰기
                     goal_text.setText(item.title)
+                    goal_text2.setText("D+"+item.dday.toString())
+
 
                 }
             }
@@ -71,6 +73,7 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
             var intent=Intent(view.context, GoalDetailActivity::class.java)
             intent.putExtra("goal_name",goalList[position].title)
             intent.putExtra("goal_id",goalList[position].id)
+            intent.putExtra("goal_dday",goalList[position].dday)
             TokenTon.setpostId(goalList[position].id)
             view.context.startActivity(intent)
         }
@@ -85,5 +88,6 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val goal_imageView: ImageView =view.goal_imageView
         val goal_text: TextView =view.goal_imageView_text
+        val goal_text2:TextView=view.goal_imageView_text2
     }
 }

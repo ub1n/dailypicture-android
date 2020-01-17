@@ -52,6 +52,7 @@ class DetailAdapter( context: Context) :
                     count_all_image=String.format(res!!.getString(R.string.count_image),position+1,imageList.size)
 
                     holder.textView.setText((position+1).toString()+" / "+imageList.size.toString())
+                    holder.dateView.setText("Day+"+item.days_count.toString())
                 }
             }
         }
@@ -63,8 +64,10 @@ class DetailAdapter( context: Context) :
             //이미지 정보 전달
             var byteArray = imageList[position].url
             var image_id = imageList[position].id
+            var image_days_count=imageList[position].days_count
             intent.putExtra("image", byteArray)
             intent.putExtra("image_id", image_id)
+            intent.putExtra("image_days_count",image_days_count)
             view.context.startActivity(intent)
         }
     }
@@ -76,5 +79,6 @@ class DetailAdapter( context: Context) :
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.imageView
         val textView:TextView=view.count_image_button
+        val dateView:TextView=view.dateText
     }
 }
