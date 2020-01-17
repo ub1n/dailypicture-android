@@ -32,6 +32,8 @@ class PhotoDetailActivity : AppCompatActivity() {
         //선택한 사진정보 intent로 받아와서 보여주기
         var image = getIntent().getStringExtra("image")
         var image_id = getIntent().getIntExtra("image_id", 0)
+        var image_days_count=getIntent().getIntExtra("image_days_count",0)
+        goalText.setText("Day+"+image_days_count.toString())
         TokenTon.setimageId(image_id)
         /*val picture = BitmapFactory.decodeByteArray(byteArray, 0, byteArray!!.size)
         detail_image.setImageBitmap(picture)*/

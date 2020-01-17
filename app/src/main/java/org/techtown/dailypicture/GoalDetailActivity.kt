@@ -176,6 +176,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                 }else {
                     //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
                     goalText.setText(response?.body()?.title)
+                    ddayText.setText("D+"+response?.body()?.dday.toString())
                     goalname = response?.body()?.title.toString()
                     if (response?.body()?.images != null) {
                             //imageList = response?.body()?.images!!
