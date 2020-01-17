@@ -57,8 +57,6 @@ class AddGoalActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_goal_2)
 
-        //Toast.makeText(this,""+TokenTon.Token,Toast.LENGTH_LONG).show()
-
         //뒤로가기 버튼
         goal_back.setOnClickListener {
             var intent= Intent(this,MainActivity::class.java)
@@ -66,7 +64,6 @@ class AddGoalActivity: AppCompatActivity() {
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             this.finish()
         }
-        //Toast.makeText(this, TokenTon.Token,Toast.LENGTH_LONG).show()
 
 
         //목표 등록 확인 버튼
@@ -78,9 +75,6 @@ class AddGoalActivity: AppCompatActivity() {
 
             }
             else {
-                //Toast.makeText(applicationContext,"로딩중이니 기다려주세요",Toast.LENGTH_LONG).show()
-
-                //button_add.isEnabled=false
                 /*Room 사용시 코드
                 goal.goal_name=goal_input_add.text.toString()
                 val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
@@ -97,13 +91,6 @@ class AddGoalActivity: AppCompatActivity() {
                     Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
                     Log.d("error",e.toString())
                 }
-               // Thread.sleep(1_500) //서버에 등록되는 시간동안 대기
-                /*var intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                this.finish()*/
-
-                //PostServer(goal_input_add.text.toString(),thumbnail,true);
             }
         }
 
@@ -143,6 +130,8 @@ class AddGoalActivity: AppCompatActivity() {
                 val thePic = extras?.get("data") as Bitmap
                 //자른 이미지 보여주기
                 imageView_add.setImageBitmap(thePic)
+                //크롭후 갤러리 저장 없앰
+                /*
                 var bitmapToUri=getImageUri(this,thePic)
                 val filePathColumn =
                     arrayOf(MediaStore.Images.Media.DATA)
@@ -153,6 +142,7 @@ class AddGoalActivity: AppCompatActivity() {
                 //이게 파일경로+파일명
                 //저장하기 위해서 변수에 경로 넣기
                 imgDecodableString = cursor.getString(columnIndex)
+                 */
             }
         }
     }
@@ -247,33 +237,27 @@ class AddGoalActivity: AppCompatActivity() {
         val file = File(thumbnail)
         val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val part = MultipartBody.Part.createFormData("thumbnail", file.name, fileReqBody)
-
         val titleRequest=RequestBody.create(MediaType.parse("multipart/form-data"),title)
-        //Toast.makeText(this,TokenTon.Token,Toast.LENGTH_LONG).show()
-        //val postRequest=PostRequest(title,thumbnail,true)
+
         val call=RetrofitGenerator.create().registerPost(titleRequest,part,"Token "+TokenTon.Token)
-        //val call=RetrofitGenerator.create().registerPost(postRequest,"Token "+TokenTon.Token)
         call.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if(response.isSuccessful==false){
                     if(response.code()==400){
                         msgError()
-                        //ServerError()
                     }else{
                     ServerError()}
                 }else{
                     button_add.isEnabled=false
                     success()
                 }
-                //토큰 값 받아오기
-                //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
-                //TokenTon.set(response.body()?.token.toString())
             }
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
                 ServerError()
             }
         })
     }
+
     private fun msgError(){
         Toast.makeText(this,"공백이 아닌 글자를 넣어주세요",Toast.LENGTH_LONG).show()
     }

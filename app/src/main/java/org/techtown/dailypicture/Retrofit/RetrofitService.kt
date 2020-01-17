@@ -28,9 +28,6 @@ interface RetrofitService {
     @Multipart
     @POST("/posts/")
     fun registerPost(@Part("title") title:RequestBody,@Part thumbnail:MultipartBody.Part, @Header("Authorization")authorization:String):Call<PostResponse>
-    //fun registerPost(@Part("title") title:String,@Part("thumbnail") thumbnail:MultipartBody.Part, @Header("Authorization")authorization:String):Call<PostResponse>
-    //fun registerPost(@Body post:PostRequest, @Header("Authorization")authorization:String):Call<PostResponse>
-
 
     @Headers("Accept:application/json")
     @GET("/posts/")

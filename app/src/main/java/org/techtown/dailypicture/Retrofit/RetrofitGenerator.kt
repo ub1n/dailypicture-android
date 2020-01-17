@@ -34,7 +34,8 @@ object RetrofitGenerator {
     private val retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://test.dailypicture.me")
+            .baseUrl("https://www.dailypicture.me/")
+            //.baseUrl("lkho.iptime.org:8888")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     fun create(): RetrofitService = retrofit.create(RetrofitService::class.java)
