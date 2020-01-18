@@ -9,7 +9,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import androidx.work.*
-//import androidx.work.*
 import kotlinx.coroutines.coroutineScope
 import org.techtown.dailypicture.MainActivity
 import org.techtown.dailypicture.R

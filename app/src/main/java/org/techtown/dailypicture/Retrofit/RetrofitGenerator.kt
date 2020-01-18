@@ -20,21 +20,11 @@ object RetrofitGenerator {
     val okHttpClient = builder
         .build()
 
-
-
-
-
-
-    /*private val retrofit =
-        Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl("http://dailypicture-cname.ap-northeast-2.elasticbeanstalk.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()*/
     private val retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://test.dailypicture.me")
+            .baseUrl("https://www.dailypicture.me/")
+            //.baseUrl("https://test.dailypicture.me ")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     fun create(): RetrofitService = retrofit.create(RetrofitService::class.java)

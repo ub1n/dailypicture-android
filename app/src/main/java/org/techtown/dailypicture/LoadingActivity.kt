@@ -2,14 +2,12 @@ package org.techtown.dailypicture
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import org.techtown.dailypicture.Retrofit.Request.LoginRequest
-import org.techtown.dailypicture.Retrofit.Request.RegisterRequest
 import org.techtown.dailypicture.Retrofit.Response.LoginResponse
-import org.techtown.dailypicture.Retrofit.Response.RegisterResponse
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
 import retrofit2.Call
@@ -50,17 +48,6 @@ class LoadingActivity : AppCompatActivity() {
                 finish()
             },DURATION)}
         //LoginServer(TokenTon.uuid,TokenTon.uuid)}
-
-        //RegisterServer(uuid,uuid)
-        /*Handler().postDelayed({
-            val intent= Intent(this,MainActivity::class.java)
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
-            finish()
-        },DURATION)*/
-
-
     }
     private fun LoginServer(username:String,password:String){
         //Retrofit 서버 연결

@@ -9,20 +9,10 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ShareCompat
-import androidx.core.app.ShareCompat.IntentBuilder
-import androidx.core.content.FileProvider
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.photo_to_gif_5.*
 import org.techtown.dailypicture.Retrofit.Response.VideoResponse
 import org.techtown.dailypicture.utils.TokenTon
@@ -31,7 +21,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-import org.techtown.dailypicture.GifActivitiy as Gif
 
 
 class GifActivitiy: AppCompatActivity() {

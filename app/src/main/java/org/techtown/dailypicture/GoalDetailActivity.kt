@@ -2,33 +2,22 @@ package org.techtown.dailypicture
 
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.add_goal_2.*
-import kotlinx.android.synthetic.main.detail_item_view.*
 import kotlinx.android.synthetic.main.goal_detail_3.*
 import org.techtown.dailypicture.Retrofit.Response.PostIdResponse
-import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.Retrofit.Response.images
 import org.techtown.dailypicture.adapter.DetailAdapter
-import org.techtown.dailypicture.adapter.MainAdapter
 import org.techtown.dailypicture.testRoom.*
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
-import java.util.*
 
 class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerview 테스트용)
     var picture= Picture()
@@ -97,8 +86,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         }
         //내보내기 버튼
         gifbutton.setOnClickListener {
-            if(mAdapter.itemCount<20){ //여기 카운트 갯수 바꾸면 사진갯수 조절
-                Toast.makeText(this,"사진 20장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
+            if(mAdapter.itemCount<10){ //여기 카운트 갯수 바꾸면 사진갯수 조절
+                Toast.makeText(this,"사진 10장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
                 //Toast.makeText(this,"사진의 수가 적습니다. 사진을 20장 이상 찍어주세요",Toast.LENGTH_LONG).show()
             }else{
             var intent=Intent(this,GifActivitiy::class.java)
@@ -223,7 +212,6 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     }
     private fun ServerError(){
         Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
-
         val intent=Intent(this,LoadingActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -1,6 +1,5 @@
 package org.techtown.dailypicture
 
-import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -74,7 +73,6 @@ class SettingActivity : AppCompatActivity() {
             }
         }else{
             switch1.isClickable=false
-            //Toast.makeText(this,"안드로이드 버전 8 이상부터 사용이 가능합니다.",Toast.LENGTH_LONG).show()
         }
 
 

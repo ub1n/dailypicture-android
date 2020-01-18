@@ -1,13 +1,12 @@
 package org.techtown.dailypicture
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import kotlinx.android.synthetic.main.activity_info.*
 import kotlinx.android.synthetic.main.info_slider.view.*
@@ -27,17 +26,8 @@ class Activity_info : AppCompatActivity() {
 
         info_back.setOnClickListener {
             if (num == 2) {
-                /*val intent = Intent(this, SettingActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)*/
                 finish()
             } else {
-                /*val intent = Intent(this, StartAppActivity::class.java)
-                intent.putExtra("check", 2)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)*/
                 finish()
             }
         }
