@@ -1,7 +1,6 @@
 package org.techtown.dailypicture
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -9,23 +8,17 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.add_goal_2.*
-import kotlinx.android.synthetic.main.detail_item_view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.techtown.dailypicture.Retrofit.Response.PostResponse
 import org.techtown.dailypicture.testRoom.Goal
-import org.techtown.dailypicture.testRoom.GoalDao
 import org.techtown.dailypicture.testRoom.GoalDatabase
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
@@ -37,20 +30,19 @@ import java.io.File
 import java.io.FileNotFoundException
 
 
-class AddGoalActivity: AppCompatActivity() {
-    var GET_GALLERY_IMAGE:Int=200
-    var goal= Goal()
-    private var goalDatabase:GoalDatabase?=null
-    var title:String?=null
-    var thumbnail:String?=null
-    var file: File?=null
-    var imgDecodableString: String?=null
+class AddGoalActivity : AppCompatActivity() {
+    var GET_GALLERY_IMAGE: Int = 200
+    var goal = Goal()
+    private var goalDatabase: GoalDatabase? = null
+    var title: String? = null
+    var thumbnail: String? = null
+    var file: File? = null
+    var imgDecodableString: String? = null
 
-    var PIC_CROP:Int=3;
-    var PICK_IMAGE_REQUEST:Int=2;
-    var picUri:Uri?=null
-    var imgStatus:Boolean=false
-
+    var PIC_CROP: Int = 3;
+    var PICK_IMAGE_REQUEST: Int = 2;
+    var picUri: Uri? = null
+    var imgStatus: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +51,7 @@ class AddGoalActivity: AppCompatActivity() {
 
         //뒤로가기 버튼
         goal_back.setOnClickListener {
-            var intent= Intent(this,MainActivity::class.java)
+            var intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             this.finish()
@@ -68,62 +60,52 @@ class AddGoalActivity: AppCompatActivity() {
 
         //목표 등록 확인 버튼
         button_add.setOnClickListener {
-            if(goal_input_add.length()==0) {
-                Toast.makeText(applicationContext,"목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
-            }else if(imgStatus==false){
-                Toast.makeText(applicationContext,"이미지를 추가해주세요", Toast.LENGTH_LONG).show()
+            if (goal_input_add.length() == 0) {
+                Toast.makeText(applicationContext, "목표 이름을 설정해주세요", Toast.LENGTH_LONG).show()
+            } else if (imgStatus == false) {
+                Toast.makeText(applicationContext, "이미지를 추가해주세요", Toast.LENGTH_LONG).show()
 
-            }
-            else {
+            } else {
                 /*Room 사용시 코드
                 goal.goal_name=goal_input_add.text.toString()
                 val database:GoalDatabase=GoalDatabase.getInstance(applicationContext)
                 val goalDao: GoalDao =database.goalDao
                 Thread{database.goalDao.insert(goal)}.start()
                  */
-                //Toast.makeText(this,file.toString(),Toast.LENGTH_LONG).show()
-                //Toast.makeText(this,imgDecodableString.toString(),Toast.LENGTH_LONG).show()
-                title=goal_input_add.text.toString();
+                title = goal_input_add.text.toString();
                 try {
                     PostServer(title.toString(), imgDecodableString.toString())
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
-                    Log.d("error",e.toString())
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+                    Log.d("error", e.toString())
                 }
             }
         }
 
         //대표 사진 설정 부분
         imageView_add.setOnClickListener {
-            /* 이전에 설정했던 코드
-            var intent=Intent(Intent.ACTION_PICK);
-            intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
-            startActivityForResult(intent,GET_GALLERY_IMAGE)
-             */
-             */
             //갤러리에서 불러오기
-            var galleryIntent = Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            var galleryIntent = Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            );
             startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
-
         }
     }
 
 
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK)
-        {
+        if (resultCode == RESULT_OK) {
             //이미지 선택
-            if (requestCode == PICK_IMAGE_REQUEST)
-            {
+            if (requestCode == PICK_IMAGE_REQUEST) {
                 picUri = data?.getData()
                 Log.d("uriGallery", picUri.toString())
                 performCrop()
             }
             //이미지 자르기
-            else if (requestCode == PIC_CROP)
-            {
+            else if (requestCode == PIC_CROP) {
                 //get the returned data
                 val extras = data?.getExtras()
                 //get the cropped bitmap
@@ -131,8 +113,8 @@ class AddGoalActivity: AppCompatActivity() {
                 //자른 이미지 보여주기
                 imageView_add.setImageBitmap(thePic)
                 //크롭후 갤러리 저장 없앰
-                /*
-                var bitmapToUri=getImageUri(this,thePic)
+
+                var bitmapToUri = getImageUri(this, thePic)
                 val filePathColumn =
                     arrayOf(MediaStore.Images.Media.DATA)
                 val cursor: Cursor? =
@@ -142,14 +124,13 @@ class AddGoalActivity: AppCompatActivity() {
                 //이게 파일경로+파일명
                 //저장하기 위해서 변수에 경로 넣기
                 imgDecodableString = cursor.getString(columnIndex)
-                 */
+
             }
         }
     }
 
     private fun performCrop() {
-        try
-        {
+        try {
             val cropIntent = Intent("com.android.camera.action.CROP")
             //indicate image type and Uri
             cropIntent.setDataAndType(picUri, "image/*")
@@ -165,9 +146,8 @@ class AddGoalActivity: AppCompatActivity() {
             cropIntent.putExtra("return-data", true)
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP)
-            imgStatus=true
-        }
-        catch (anfe:ActivityNotFoundException) {
+            imgStatus = true
+        } catch (anfe: ActivityNotFoundException) {
             val errorMessage = "크롭 할 수 없는 이미지 입니다."
             val toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT)
             toast.show()
@@ -175,10 +155,11 @@ class AddGoalActivity: AppCompatActivity() {
     }
 
     //Bitmap을 Uri로 변경하기
-    private fun getImageUri(context: Context, inImage:Bitmap): Uri? {
-        var bytes=ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG,100,bytes)
-        var path=MediaStore.Images.Media.insertImage(context.contentResolver,inImage,"Title",null)
+    private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
+        var bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        var path =
+            MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", null)
         return Uri.parse(path)
     }
 
@@ -232,53 +213,55 @@ class AddGoalActivity: AppCompatActivity() {
         return data
     }
 
-    //Retrofit 서버 연결
-    private fun PostServer(title:String,thumbnail:String){
+    private fun PostServer(title: String, thumbnail: String) {
         val file = File(thumbnail)
         val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val part = MultipartBody.Part.createFormData("thumbnail", file.name, fileReqBody)
-        val titleRequest=RequestBody.create(MediaType.parse("multipart/form-data"),title)
+        val titleRequest = RequestBody.create(MediaType.parse("multipart/form-data"), title)
 
-        val call=RetrofitGenerator.create().registerPost(titleRequest,part,"Token "+TokenTon.Token)
+        val call =
+            RetrofitGenerator.create().registerPost(titleRequest, part, "Token " + TokenTon.Token)
         call.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
-                if(response.isSuccessful==false){
-                    if(response.code()==400){
+                if (response.isSuccessful == false) {
+                    if (response.code() == 400) {
                         msgError()
-                    }else{
-                    ServerError()}
-                }else{
-                    button_add.isEnabled=false
+                    } else {
+                        ServerError()
+                    }
+                } else {
+                    button_add.isEnabled = false
                     success()
                 }
             }
+
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
                 ServerError()
             }
         })
     }
 
-    private fun msgError(){
-        Toast.makeText(this,"공백이 아닌 글자를 넣어주세요",Toast.LENGTH_LONG).show()
+    private fun msgError() {
+        Toast.makeText(this, "공백이 아닌 글자를 넣어주세요", Toast.LENGTH_LONG).show()
     }
-    private fun ServerError(){
 
-        Toast.makeText(this,"서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다",Toast.LENGTH_LONG).show()
+    private fun ServerError() {
 
-        val intent=Intent(this,LoadingActivity::class.java)
+        Toast.makeText(this, "서버와의 연결이 종료되었습니다.초기화면으로 돌아갑니다", Toast.LENGTH_LONG).show()
+
+        val intent = Intent(this, LoadingActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivityForResult(intent,2)
+        startActivityForResult(intent, 2)
         finish()
     }
-    private fun success(){
+
+    private fun success() {
         var intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         this.finish()
     }
 
-
-    
 
 }

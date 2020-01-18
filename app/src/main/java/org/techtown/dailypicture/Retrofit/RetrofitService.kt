@@ -18,26 +18,21 @@ interface RetrofitService {
     //fun registerUser(@Body user : RegisterRequest) : Call<RegisterUserResponse>
     fun registerUser(@Body post: RegisterRequest):Call<RegisterResponse>
 
-    //username,password주면 token값 주는 것
+    //username,password주면 token값 반환
     @Headers("Accept: application/json")
     @POST("/api-token-auth/")
     fun getToken(@Body user : LoginRequest) : Call<LoginResponse>
-
 
     @Headers("Accept:application/json")
     @Multipart
     @POST("/posts/")
     fun registerPost(@Part("title") title:RequestBody,@Part thumbnail:MultipartBody.Part, @Header("Authorization")authorization:String):Call<PostResponse>
 
+
     @Headers("Accept:application/json")
     @GET("/posts/")
     fun getPost(@Header("Authorization")authorization:String):Call<List<PostResponse>>
 
-    /*@Headers("Accept:application/json")
-    @Multipart
-    @POST("/images/{post_id}/list")
-    fun imagePost(@Part("post_id") post_id:RequestBody,@Part url:MultipartBody.Part,@Header("Authorization")authorization:String,@Path("post_id") postid:Int?):Call<ImagePostResponse>
-*/
     @Headers("Accept:application/json")
     @Multipart
     @POST("/images/create")

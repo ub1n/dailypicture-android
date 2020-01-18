@@ -9,7 +9,6 @@ import java.io.File
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.content.Intent
 import android.widget.FrameLayout
-//import com.android.example.cameraxbasic.utils.FLAGS_FULLSCREEN
 import org.techtown.dailypicture.utils.FLAGS_FULLSCREEN
 
 const val KEY_EVENT_ACTION = "key_event_action"
