@@ -28,6 +28,7 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.System.out
 
 
 class AddGoalActivity : AppCompatActivity() {
@@ -72,7 +73,7 @@ class AddGoalActivity : AppCompatActivity() {
                 val goalDao: GoalDao =database.goalDao
                 Thread{database.goalDao.insert(goal)}.start()
                  */
-                title = goal_input_add.text.toString();
+                title = goal_input_add.text.toString()
                 try {
                     PostServer(title.toString(), imgDecodableString.toString())
                 } catch (e: Exception) {
@@ -112,7 +113,6 @@ class AddGoalActivity : AppCompatActivity() {
                 val thePic = extras?.get("data") as Bitmap
                 //자른 이미지 보여주기
                 imageView_add.setImageBitmap(thePic)
-                //크롭후 갤러리 저장 없앰
 
                 var bitmapToUri = getImageUri(this, thePic)
                 val filePathColumn =
@@ -157,9 +157,10 @@ class AddGoalActivity : AppCompatActivity() {
     //Bitmap을 Uri로 변경하기
     private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
         var bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+        val titlename=Math.random()
         var path =
-            MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", null)
+            MediaStore.Images.Media.insertImage(context.contentResolver, inImage,TokenTon.uuid.toString()+titlename.toString(), null)
         return Uri.parse(path)
     }
 
@@ -202,9 +203,11 @@ class AddGoalActivity : AppCompatActivity() {
         try {
             val cr = baseContext.contentResolver
             val inputStream = cr.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
+            var bitmap = BitmapFactory.decodeStream(inputStream)
             val baos = ByteArrayOutputStream()
+
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
             data = baos.toByteArray()
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
@@ -218,7 +221,7 @@ class AddGoalActivity : AppCompatActivity() {
         val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val part = MultipartBody.Part.createFormData("thumbnail", file.name, fileReqBody)
         val titleRequest = RequestBody.create(MediaType.parse("multipart/form-data"), title)
-
+        Toast.makeText(this,thumbnail,Toast.LENGTH_LONG).show()
         val call =
             RetrofitGenerator.create().registerPost(titleRequest, part, "Token " + TokenTon.Token)
         call.enqueue(object : Callback<PostResponse> {
