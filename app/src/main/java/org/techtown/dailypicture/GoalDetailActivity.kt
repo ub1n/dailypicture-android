@@ -1,14 +1,30 @@
 package org.techtown.dailypicture
 
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Resources
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.add_goal_2.*
+import kotlinx.android.synthetic.main.add_photo_dialog.view.*
 import kotlinx.android.synthetic.main.goal_detail_3.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import org.techtown.dailypicture.Retrofit.Response.ImagePostResponse
 import org.techtown.dailypicture.Retrofit.Response.PostIdResponse
 import org.techtown.dailypicture.Retrofit.Response.images
 import org.techtown.dailypicture.adapter.DetailAdapter
@@ -18,6 +34,9 @@ import org.techtown.kotlin_todolist.RetrofitGenerator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerview 테스트용)
     var picture= Picture()
@@ -30,17 +49,18 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     var count_all_image:String?=null
     var res: Resources?=null
     var count:Int?=null
+    var file: File? = null
+    var imgDecodableString: String? = null
+
+    var PIC_CROP: Int = 3;
+    var PICK_IMAGE_REQUEST: Int = 2;
+    var picUri: Uri? = null
+    var imgStatus: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goal_detail_3)
-
-        /*if(TokenTon.uuid==""||TokenTon.Token==""){
-            var intent=Intent(this, LoadingActivity::class.java)
-            startActivityForResult(intent,2)
-            finish()
-        }*/
 
         //목표 이름 불러오기
         var goal_name=getIntent().getStringExtra("goal_name")
@@ -79,16 +99,37 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
 
         //카메라 아이콘 버튼
-        cameraButton.setOnClickListener { //임시
-            //var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            var intent=Intent(this,CameraActivity::class.java)
-            startActivityForResult(intent,123)
+        cameraButton.setOnClickListener {
+            val mDialogView=LayoutInflater.from(this).inflate(R.layout.add_photo_dialog,null)
+            val mBuilder=AlertDialog.Builder(this)
+                .setView(mDialogView)
+                .setTitle("Add View")
+            val mAlertDialog=mBuilder.show()
+            //사진찍기
+            mDialogView.add_camera.setOnClickListener{
+                mAlertDialog.dismiss()
+                //var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                var intent=Intent(this,CameraActivity::class.java)
+                startActivityForResult(intent,123)
+
+            }
+            //갤러리 불러오기
+            mDialogView.add_gallery.setOnClickListener {
+                mAlertDialog.dismiss()
+                var galleryIntent = Intent(
+                    Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                );
+                startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+            }
+
+
+
         }
         //내보내기 버튼
         gifbutton.setOnClickListener {
             if(mAdapter.itemCount<10){ //여기 카운트 갯수 바꾸면 사진갯수 조절
                 Toast.makeText(this,"사진 10장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
-                //Toast.makeText(this,"사진의 수가 적습니다. 사진을 20장 이상 찍어주세요",Toast.LENGTH_LONG).show()
             }else{
             var intent=Intent(this,GifActivitiy::class.java)
                 intent.putExtra("goal_name",goalname)
@@ -127,31 +168,82 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         PostIdGetServer()
     }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==123){
-            if(data!=null){
-                Toast.makeText(this,"save",Toast.LENGTH_LONG).show()
-                val img=data.getByteArrayExtra("data")
-           *//* var bmp=data?.extras?.get("data") as Bitmap
-            var stream= ByteArrayOutputStream()
-            bmp?.compress(Bitmap.CompressFormat.JPEG,100,stream)
-            var byteArray=stream.toByteArray()*//*
 
-            picture.image=img
-            val database: PictureDatabase = PictureDatabase.getInstance(applicationContext)
-            val pictureDao: PictureDao =database.pictureDao
+    @SuppressLint("MissingSuperCall")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+           Log.d("requestCode",requestCode.toString())
+            //이미지 선택
+            if (requestCode == PICK_IMAGE_REQUEST) {
+                Toast.makeText(this,"저장완료44",Toast.LENGTH_LONG).show()
+                picUri = data?.getData()
+                Log.d("uriGallery", picUri.toString())
+                performCrop()
+            }
+            //이미지 자르기
+            else if (requestCode == PIC_CROP) {
+                Log.d("requestCode",requestCode.toString())
 
-            Thread { database.pictureDao.insert(picture) }.start()
-            var intent=Intent(this,GoalDetailActivity::class.java)
-            startActivity(intent)
-            this.finish()}
+                /*//get the returned data
+                val extras = data?.getExtras()
+                //get the cropped bitmap
+                val thePic = extras?.get("data") as Bitmap
+                //자른 이미지 보여주기
+                //imageView_add.setImageBitmap(thePic)
 
-        }else{
-            Toast.makeText(this,"non-save",Toast.LENGTH_LONG).show()
+
+                var bitmapToUri = getImageUri(this, thePic)
+                val filePathColumn =
+                    arrayOf(MediaStore.Images.Media.DATA)
+                val cursor: Cursor? =
+                    contentResolver.query(bitmapToUri!!, filePathColumn, null, null, null)
+                cursor!!.moveToFirst()
+                val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+                //이게 파일경로+파일명
+                //저장하기 위해서 변수에 경로 넣기
+                imgDecodableString = cursor.getString(columnIndex)*/
+                //PostImage(imgDecodableString.toString())
+            }
         }
-    }*/
-    var code:Int=3
+    }
+
+    private fun performCrop() {
+        try {
+            Toast.makeText(this,"저장완료1",Toast.LENGTH_LONG).show()
+            val cropIntent = Intent("com.android.camera.action.CROP")
+            //indicate image type and Uri
+            cropIntent.setDataAndType(picUri, "image/*")
+            //set crop properties
+            cropIntent.putExtra("crop", "true")
+            //자르는 비율 설정
+            cropIntent.putExtra("aspectX", 385)
+            cropIntent.putExtra("aspectY", 385)
+            //밖으로 출력될 때 비율
+            cropIntent.putExtra("outputX", 385)
+            cropIntent.putExtra("outputY", 385)
+            //retrieve data on return
+            cropIntent.putExtra("return-data", true)
+            //start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP)
+            imgStatus = true
+        } catch (anfe: ActivityNotFoundException) {
+            val errorMessage = "크롭 할 수 없는 이미지 입니다."
+            val toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT)
+            toast.show()
+        }
+    }
+
+    //Bitmap을 Uri로 변경하기
+    private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
+        var bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.PNG, 70, bytes)
+        val titlename=Math.random()
+        var path =
+            MediaStore.Images.Media.insertImage(context.contentResolver, inImage,"goalImage"+titlename, null)
+        return Uri.parse(path)
+    }
+
+    var code:Int=1
     private fun PostIdGetServer(){
         //Retrofit 서버 연결
         val call= RetrofitGenerator.create().postIdPost("Token "+TokenTon.Token,TokenTon.postId)
@@ -161,7 +253,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                 if(response?.isSuccessful==false){
                     if(response?.code()==404){
                         code=404}else{
-                    ServerError()}
+                        ServerError()
+                    }
                 }else {
                     //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
                     goalText.setText(response?.body()?.title)
@@ -190,7 +283,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             }
             override fun onFailure(call: Call<PostIdResponse>, t: Throwable) {
                 if(code!=404){
-                ServerError()}
+                    ServerError()
+                }
                 //Toast.makeText(this@GoalDetailActivity,"$t",Toast.LENGTH_LONG).show()
 
             }
@@ -217,5 +311,35 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivityForResult(intent,2)
         finish()
+    }
+
+
+    private fun PostImage(img:String) {
+        //Retrofit 서버 연결
+        val file = File(img)
+        val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val part = MultipartBody.Part.createFormData("url", file.name, fileReqBody)
+        val titleRequest =
+            RequestBody.create(MediaType.parse("multipart/form-data"), TokenTon.postId.toString())
+
+        val call =
+            RetrofitGenerator.create().imagePost(titleRequest, part, "Token " + TokenTon.Token)
+
+        call.enqueue(object : Callback<ImagePostResponse> {
+            override fun onResponse(
+                call: Call<ImagePostResponse>,
+                response: Response<ImagePostResponse>) {
+                //file.delete()
+                //토큰 값 받아오기
+                //Toast.makeText(this@AddGoalActivity,response.body()?.title.toString(),Toast.LENGTH_LONG).show()
+                //TokenTon.set(response.body()?.token.toString())
+                if (response.isSuccessful == false) {
+                    ServerError()
+                }
+            }
+
+            override fun onFailure(call: Call<ImagePostResponse>, t: Throwable) {
+            }
+        })
     }
 }
