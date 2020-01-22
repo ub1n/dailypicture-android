@@ -28,6 +28,7 @@ import org.techtown.dailypicture.Retrofit.Response.ImagePostResponse
 import org.techtown.dailypicture.Retrofit.Response.PostIdResponse
 import org.techtown.dailypicture.Retrofit.Response.images
 import org.techtown.dailypicture.adapter.DetailAdapter
+import org.techtown.dailypicture.fragments.ImageTon
 import org.techtown.dailypicture.testRoom.*
 import org.techtown.dailypicture.utils.TokenTon
 import org.techtown.kotlin_todolist.RetrofitGenerator
@@ -61,7 +62,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.goal_detail_3)
-
+        ImageTon.setfilter(null)
         //목표 이름 불러오기
         var goal_name=getIntent().getStringExtra("goal_name")
         var goal_id=getIntent().getIntExtra("goal_id",0)
@@ -106,6 +107,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                 .setTitle("Add View")
             val mAlertDialog=mBuilder.show()
             //사진찍기
+
             mDialogView.add_camera.setOnClickListener{
                 mAlertDialog.dismiss()
                 //var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -184,7 +186,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             else if (requestCode == PIC_CROP) {
                 Log.d("requestCode",requestCode.toString())
 
-                /*//get the returned data
+                //get the returned data
                 val extras = data?.getExtras()
                 //get the cropped bitmap
                 val thePic = extras?.get("data") as Bitmap
@@ -201,8 +203,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                 val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
                 //이게 파일경로+파일명
                 //저장하기 위해서 변수에 경로 넣기
-                imgDecodableString = cursor.getString(columnIndex)*/
-                //PostImage(imgDecodableString.toString())
+                imgDecodableString = cursor.getString(columnIndex)
+                PostImage(imgDecodableString.toString())
             }
         }
     }
@@ -236,7 +238,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     //Bitmap을 Uri로 변경하기
     private fun getImageUri(context: Context, inImage: Bitmap): Uri? {
         var bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.PNG, 70, bytes)
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes)
         val titlename=Math.random()
         var path =
             MediaStore.Images.Media.insertImage(context.contentResolver, inImage,"goalImage"+titlename, null)
