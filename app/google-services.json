@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "558134511001",
+    "firebase_url": "https://dailypicture-8421a.firebaseio.com",
+    "project_id": "dailypicture-8421a",
+    "storage_bucket": "dailypicture-8421a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558134511001:android:d3ba722a5ea875db92ff08",
+        "android_client_info": {
+          "package_name": "org.techtown.dailypicture"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558134511001-jrt0e6vbpq8hruot4d4g7vlchiicsgvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF3Il4boK7-Zj1R2mFeNSxAY1__0g56io"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558134511001-jrt0e6vbpq8hruot4d4g7vlchiicsgvd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
