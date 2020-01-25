@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.detail_item_view.view.*
 import org.techtown.dailypicture.PhotoDetailActivity
 import org.techtown.dailypicture.R
 import org.techtown.dailypicture.Retrofit.Response.images
+import org.techtown.dailypicture.fragments.ImageTon
 
 class DetailAdapter( context: Context) :
     RecyclerView.Adapter<DetailAdapter.ViewHolder>() {
@@ -48,7 +49,8 @@ class DetailAdapter( context: Context) :
                     val thumbnail= item.url
                     Picasso.get().load(thumbnail).into(imageView)
                     Log.d("count",imageList.size.toString())
-
+                    //if(position+1==imageList.size){
+                        ImageTon.setfilter(item.url)
                     count_all_image=String.format(res!!.getString(R.string.count_image),position+1,imageList.size)
 
                     holder.textView.setText((position+1).toString()+" / "+imageList.size.toString())

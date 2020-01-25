@@ -71,6 +71,7 @@ import com.android.example.cameraxbasic.utils.simulateClick*/
 import org.techtown.dailypicture.utils.ANIMATION_FAST_MILLIS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.add_goal_2.*
 import kotlinx.android.synthetic.main.camera_ui_container.*
 import kotlinx.android.synthetic.main.camera_ui_container.view.*
@@ -539,7 +540,15 @@ class CameraFragment : Fragment() {
 
         }
 
-
+        if(ImageTon.filter!=null){
+            Picasso.get().load(ImageTon.filter).into(imageViewV)
+            imageViewV.alpha= 0.5F
+            seekBar.progress=50
+            seekBar.visibility=View.VISIBLE
+            image_rotate_button.visibility=View.VISIBLE
+            imageViewV.layoutParams.height=1080
+            imageViewV.layoutParams.width=1080
+        }
 
         // 필터로쓸 사진 불러오기
         controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {

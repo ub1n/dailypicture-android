@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -11,8 +13,8 @@ android {
         applicationId "org.techtown.dailypicture"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -70,4 +72,5 @@ dependencies {
     api "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper_version"
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
     implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
 }

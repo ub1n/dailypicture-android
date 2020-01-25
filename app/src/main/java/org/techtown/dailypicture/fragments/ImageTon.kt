@@ -9,7 +9,10 @@ class ImageTon {
 
         lateinit var img: File
         lateinit var bm:Bitmap
-
+        var filter:String?=null
+        fun setfilter(fil:String?){
+            filter=fil
+        }
         var selfInt=0
         fun set(){
             selfInt=0
