@@ -130,7 +130,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         }
         //내보내기 버튼
         gifbutton.setOnClickListener {
-            if(mAdapter.itemCount<10){ //여기 카운트 갯수 바꾸면 사진갯수 조절
+            if(mAdapter.itemCount<5){ //여기 카운트 갯수 바꾸면 사진갯수 조절
                 Toast.makeText(this,"사진 10장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
             }else{
             var intent=Intent(this,GifActivitiy::class.java)
@@ -217,13 +217,17 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             cropIntent.setDataAndType(picUri, "image/*")
             //set crop properties
             cropIntent.putExtra("crop", "true")
+            cropIntent.putExtra("outputX", 1080)
+            cropIntent.putExtra("outputY", 1080)
             //자르는 비율 설정
-            cropIntent.putExtra("aspectX", 385)
-            cropIntent.putExtra("aspectY", 385)
+            cropIntent.putExtra("aspectX", 1)
+            cropIntent.putExtra("aspectY", 1)
             //밖으로 출력될 때 비율
-            cropIntent.putExtra("outputX", 385)
-            cropIntent.putExtra("outputY", 385)
+
             //retrieve data on return
+            cropIntent.putExtra("scaleUpIfNeeded",true)
+            cropIntent.putExtra("scale",true)
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT,picUri)
             cropIntent.putExtra("return-data", true)
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP)
@@ -260,7 +264,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                 }else {
                     //Toast.makeText(this@GoalDetailActivity,response?.body()?.title,Toast.LENGTH_LONG).show()
                     goalText.setText(response?.body()?.title)
-                    ddayText.setText("D+"+response?.body()?.dday.toString())
+                    //ddayText.setText("D+"+response?.body()?.dday.toString())
                     goalname = response?.body()?.title.toString()
                     if (response?.body()?.images != null) {
                             //imageList = response?.body()?.images!!

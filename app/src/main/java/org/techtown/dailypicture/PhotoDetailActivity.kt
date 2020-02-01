@@ -66,7 +66,7 @@ class PhotoDetailActivity : AppCompatActivity() {
             Glide.with(this)
                 .asBitmap()
                 .load(image)
-                .into(object : SimpleTarget<Bitmap>(1920, 1080) {
+                .into(object : SimpleTarget<Bitmap>(1080, 1080) {
                     override fun onResourceReady(
                         resource: Bitmap,
                         transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?

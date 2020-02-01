@@ -5,14 +5,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
+import androidx.core.content.FileProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.SimpleTarget
 import kotlinx.android.synthetic.main.photo_to_gif_5.*
 import org.techtown.dailypicture.Retrofit.Response.VideoResponse
 import org.techtown.dailypicture.utils.TokenTon
@@ -28,11 +36,13 @@ class GifActivitiy: AppCompatActivity() {
     var uriPath:Uri?=null
     var str_url:String?=null
     var uri:Uri?=null
+    var gif_url:String?=null
     private var downloadId: Long = -1L
     private lateinit var downloadManager: DownloadManager
     private var downloadID: Long = 0
     var goal_name:String?=null
-    var storageDir:File?=null
+    lateinit var storageDir:File
+    var downInt:Int=0
 
     private val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(
@@ -52,6 +62,7 @@ class GifActivitiy: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_to_gif_5)
         getVideoServer(TokenTon.postId!!)
+        //getGifServer(TokenTon.postId!!)
         goal_name=getIntent().getStringExtra("goal_name")
         goalText.setText(goal_name)
 
@@ -76,21 +87,29 @@ class GifActivitiy: AppCompatActivity() {
         back_gif.setOnClickListener {
             finish()
         }
-        /*share_gif.setOnClickListener {
-            var uri=Uri.parse(str_url)
-            //var uriToImage=FileProvider.getUriForFile(applicationContext,FILES_AUTHORITY,)
-            var shareIntent= IntentBuilder
-                .from(this)
-                .setStream(uri)
-                .intent
-            shareIntent.setData(uri)
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        share_gif.setOnClickListener {
+            if(downInt!=1){
+                Toast.makeText(this,"저장을 먼저 해주세요!",Toast.LENGTH_LONG).show()
+            }else {
 
-            //if(shareIntent.resolveActivity(packageManager)!=null){
-                startActivity(shareIntent)
-            //}
+                var uri = FileProvider.getUriForFile(
+                    this,
+                    applicationContext.packageName + ".provider",
+                    storageDir
+                )
 
-        }*/
+                val shareIntent = Intent().apply {
+
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    type = "video/*"
+                    action = Intent.ACTION_SEND
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                }
+
+
+                startActivity(Intent.createChooser(shareIntent, "공유하기"))
+            }
+        }
     }
 
 
@@ -114,10 +133,28 @@ class GifActivitiy: AppCompatActivity() {
         })
     }
 
+    private fun getGifServer(id:Int){
+        //Retrofit 서버 연결
+        val call= RetrofitGenerator.create().getGif("Token "+ TokenTon.Token,id)
+
+        call.enqueue(object : Callback<VideoResponse> {
+            override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
+                if(response.isSuccessful==false){
+                    ServerError()
+                }else{
+                    gif_url=response.body()?.video_url.toString()
+                    }
+            }
+            override fun onFailure(call: Call<VideoResponse>, t: Throwable) {
+                ServerError()
+            }
+        })
+    }
+
     //다운로드 매니저
     private fun beginDownload() {
         //val file = File(getExternalFilesDir(null), goal_name+".mp4")
-        storageDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/DailyPicture",goal_name+".mp4")
+        storageDir= File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/DailyPicture",goal_name+".mp4")
         val request =
             DownloadManager.Request(Uri.parse(str_url))
                 .setTitle("DailyPicture") // Title of the Download Notification
@@ -144,6 +181,7 @@ class GifActivitiy: AppCompatActivity() {
             {
                 DownloadToast()
             }
+            downInt=1
         }
     }
     private fun DownloadToast(){

@@ -52,6 +52,10 @@ interface RetrofitService {
     fun getVideo(@Header("Authorization")authorization:String,@Path("id") id:Int?):Call<VideoResponse>
 
     @Headers("Accept:application/json")
+    @GET("/videos/{post_id}/gif")
+    fun getGif(@Header("Authorization")authorization:String,@Path("post_id") id:Int?):Call<VideoResponse>
+
+    @Headers("Accept:application/json")
     @DELETE("/images/{id}")
     fun imageDelete(@Header("Authorization")authorization:String,@Path("id") id:Int?):Call<PostIdResponse>
 }
