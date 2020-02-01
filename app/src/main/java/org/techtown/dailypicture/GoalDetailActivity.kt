@@ -1,6 +1,7 @@
 package org.techtown.dailypicture
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
@@ -18,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.add_goal_2.*
 import kotlinx.android.synthetic.main.add_photo_dialog.view.*
 import kotlinx.android.synthetic.main.goal_detail_3.*
@@ -53,8 +55,8 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
     var file: File? = null
     var imgDecodableString: String? = null
 
-    var PIC_CROP: Int = 3;
-    var PICK_IMAGE_REQUEST: Int = 2;
+    var PIC_CROP: Int = 51;
+    var PICK_IMAGE_REQUEST: Int = 52;
     var picUri: Uri? = null
     var imgStatus: Boolean = false
 
@@ -118,11 +120,13 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             //갤러리 불러오기
             mDialogView.add_gallery.setOnClickListener {
                 mAlertDialog.dismiss()
-                var galleryIntent = Intent(
+                /*var galleryIntent = Intent(
                     Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 );
                 startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+            */
+            ImagePicker()
             }
 
 
@@ -160,6 +164,14 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
     }
 
+    private fun ImagePicker(){
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.putExtra("crop", "true")
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+   }
+
     override fun onRestart() {
         super.onRestart()
         PostIdGetServer()
@@ -173,7 +185,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK) {
+        /*if (resultCode == RESULT_OK) {
            Log.d("requestCode",requestCode.toString())
             //이미지 선택
             if (requestCode == PICK_IMAGE_REQUEST) {
@@ -205,6 +217,21 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
                 //저장하기 위해서 변수에 경로 넣기
                 imgDecodableString = cursor.getString(columnIndex)
                 PostImage(imgDecodableString.toString())
+            }
+        }*/
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if(data == null || data.data == null){
+                return
+            }
+            CropImage.activity(data.data!!).start(this);
+        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this,"success",Toast.LENGTH_LONG).show()
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                val error = result.getError()
+                Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

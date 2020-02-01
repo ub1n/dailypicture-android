@@ -84,10 +84,10 @@ class ReminderWorker(appContext: Context,workerParams: WorkerParameters):
                 Notification.Builder(applicationContext,channelId)
                     //.setContentTitle("Daily Picture")
                     .setContentText("아직 오늘의 사진을 안찍으셨다면 사진을 남겨주세요")
-                    .setSmallIcon(R.drawable.icon2)
+                    .setSmallIcon(R.drawable.ic_noti_icon)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    .setColor(Color.parseColor("#956133"))
+                    .setColor(Color.parseColor("#AB7A4C"))
             notificationManager.notify(1234,builder.build())
             Result.success()
         }
