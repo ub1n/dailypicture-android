@@ -13,8 +13,8 @@ android {
         applicationId "org.techtown.dailypicture"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -67,9 +67,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    // Android-Image-Cropper
-    def android_image_cropper_version = "2.8.+"
-    api "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper_version"
+    // Android-Image-Croppe
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
     implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
     implementation 'com.google.firebase:firebase-analytics:17.2.0'

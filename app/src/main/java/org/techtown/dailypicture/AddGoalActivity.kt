@@ -77,6 +77,7 @@ class AddGoalActivity : AppCompatActivity() {
                  */
                 title = goal_input_add.text.toString()
                 try {
+                    button_add.isEnabled=false
                     PostServer(title.toString(), imgDecodableString.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
