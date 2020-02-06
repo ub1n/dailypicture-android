@@ -1,6 +1,7 @@
 package org.techtown.dailypicture
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.add_goal_2.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -75,10 +77,11 @@ class AddGoalActivity : AppCompatActivity() {
                  */
                 title = goal_input_add.text.toString()
                 try {
+                    button_add.isEnabled=false
                     PostServer(title.toString(), imgDecodableString.toString())
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
                     Log.d("error", e.toString())
                 }
             }
@@ -86,19 +89,27 @@ class AddGoalActivity : AppCompatActivity() {
 
         //대표 사진 설정 부분
         imageView_add.setOnClickListener {
-            //갤러리에서 불러오기
+            /*//갤러리에서 불러오기
             var galleryIntent = Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             );
-            startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+            startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);*/
+            ImagePicker()
         }
     }
 
+    private fun ImagePicker(){
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.putExtra("crop", "true")
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+    }
 
     @SuppressLint("MissingSuperCall")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK) {
+        /*if (resultCode == RESULT_OK) {
             //이미지 선택
             if (requestCode == PICK_IMAGE_REQUEST) {
                 picUri = data?.getData()
@@ -125,6 +136,34 @@ class AddGoalActivity : AppCompatActivity() {
                 //저장하기 위해서 변수에 경로 넣기
                 imgDecodableString = cursor.getString(columnIndex)
 
+            }
+        }*/
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if(data == null || data.data == null){
+                return
+            }
+            CropImage.activity(data.data!!).setAspectRatio(3,2).start(this)
+        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == RESULT_OK) {
+                var resultUri = result.getUri();
+                imgStatus = true
+                imageView_add.setImageURI(resultUri)
+                var bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
+                var bitmapToUri = getImageUri(this, bitmap)
+                val filePathColumn =
+                    arrayOf(MediaStore.Images.Media.DATA)
+                val cursor: Cursor? =
+                    contentResolver.query(bitmapToUri!!, filePathColumn, null, null, null)
+                cursor!!.moveToFirst()
+                val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+                //이게 파일경로+파일명
+                //저장하기 위해서 변수에 경로 넣기
+                imgDecodableString = cursor.getString(columnIndex)
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                val error = result.getError()
+                Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -221,7 +260,7 @@ class AddGoalActivity : AppCompatActivity() {
         val fileReqBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val part = MultipartBody.Part.createFormData("thumbnail", file.name, fileReqBody)
         val titleRequest = RequestBody.create(MediaType.parse("multipart/form-data"), title)
-        Toast.makeText(this,thumbnail,Toast.LENGTH_LONG).show()
+        //Toast.makeText(this,thumbnail,Toast.LENGTH_LONG).show()
         val call =
             RetrofitGenerator.create().registerPost(titleRequest, part, "Token " + TokenTon.Token)
         call.enqueue(object : Callback<PostResponse> {

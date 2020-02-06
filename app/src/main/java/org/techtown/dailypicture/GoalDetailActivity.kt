@@ -2,6 +2,7 @@ package org.techtown.dailypicture
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
@@ -106,11 +107,10 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             val mDialogView=LayoutInflater.from(this).inflate(R.layout.add_photo_dialog,null)
             val mBuilder=AlertDialog.Builder(this)
                 .setView(mDialogView)
-                .setTitle("Add View")
             val mAlertDialog=mBuilder.show()
             //사진찍기
 
-            mDialogView.add_camera.setOnClickListener{
+            mDialogView.add_camera_lay.setOnClickListener{
                 mAlertDialog.dismiss()
                 //var intent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 var intent=Intent(this,CameraActivity::class.java)
@@ -118,7 +118,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
             }
             //갤러리 불러오기
-            mDialogView.add_gallery.setOnClickListener {
+            mDialogView.add_gallery_lay.setOnClickListener {
                 mAlertDialog.dismiss()
                 /*var galleryIntent = Intent(
                     Intent.ACTION_PICK,
@@ -134,7 +134,7 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         }
         //내보내기 버튼
         gifbutton.setOnClickListener {
-            if(mAdapter.itemCount<5){ //여기 카운트 갯수 바꾸면 사진갯수 조절
+            if(mAdapter.itemCount<10){ //여기 카운트 갯수 바꾸면 사진갯수 조절
                 Toast.makeText(this,"사진 10장부터 영상 변환이 가능해요!",Toast.LENGTH_LONG).show()
             }else{
             var intent=Intent(this,GifActivitiy::class.java)
@@ -224,11 +224,26 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
             if(data == null || data.data == null){
                 return
             }
-            CropImage.activity(data.data!!).start(this);
+            CropImage.activity(data.data!!).setAspectRatio(1,1).start(this)
         }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this,"success",Toast.LENGTH_LONG).show()
+                var resultUri = result.getUri();
+                //Toast.makeText(this,resultUri.toString(),Toast.LENGTH_LONG);
+                //Toast.makeText(this,resultUri.toString(),Toast.LENGTH_LONG).show()
+                var bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
+                var bitmapToUri = getImageUri(this, bitmap)
+                val filePathColumn =
+                    arrayOf(MediaStore.Images.Media.DATA)
+                val cursor: Cursor? =
+                    contentResolver.query(bitmapToUri!!, filePathColumn, null, null, null)
+                cursor!!.moveToFirst()
+                val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+                //이게 파일경로+파일명
+                //저장하기 위해서 변수에 경로 넣기
+                imgDecodableString = cursor.getString(columnIndex)
+                PostImage(imgDecodableString.toString())
+                Thread.sleep(200);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.getError()
                 Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
@@ -238,7 +253,6 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
 
     private fun performCrop() {
         try {
-            Toast.makeText(this,"저장완료1",Toast.LENGTH_LONG).show()
             val cropIntent = Intent("com.android.camera.action.CROP")
             //indicate image type and Uri
             cropIntent.setDataAndType(picUri, "image/*")

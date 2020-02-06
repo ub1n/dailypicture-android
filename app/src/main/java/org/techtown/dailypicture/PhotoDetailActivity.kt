@@ -43,8 +43,7 @@ class PhotoDetailActivity : AppCompatActivity() {
         //뒤로 가기 버튼
         back_detail.setOnClickListener {
             var intent = Intent(this, GoalDetailActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivityForResult(intent, 2)
             finish()
         }

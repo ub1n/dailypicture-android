@@ -107,7 +107,7 @@
         <ImageView
             android:id="@+id/imageView_add"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="240dp"
             android:layout_marginTop="20sp"
             android:background="#DFDCDC"
             android:scaleType="centerCrop" />
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="52dp"
         android:background="@drawable/button_round_corners_2"
         android:gravity="center"
         android:text="                                    확인                                    "
