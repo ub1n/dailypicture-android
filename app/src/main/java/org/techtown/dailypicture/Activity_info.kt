@@ -43,7 +43,7 @@ class Activity_info : AppCompatActivity() {
     }
 
     class pageadapter(num:Int):PagerAdapter(){
-        val images_first= intArrayOf(R.drawable.sample0,R.drawable.sample1,R.drawable.sample2,R.drawable.sample3,R.drawable.sample4,R.drawable.sample5)
+        val images_first= intArrayOf(R.drawable.sample0,R.drawable.sample1,R.drawable.sample2,R.drawable.sample3,R.drawable.sample4)
         val images= intArrayOf(R.drawable.sample0,R.drawable.sample1,R.drawable.sample2,R.drawable.sample3,R.drawable.sample4)
         val numb=num
         override fun getCount(): Int {

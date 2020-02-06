@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.add_goal_2.*
@@ -151,15 +152,34 @@ class GoalDetailActivity: AppCompatActivity() { //여긴 싹다 임시(recyclerv
         }
         //삭제하기 버튼
         delete_goal_detail.setOnClickListener {
+            val builder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog))
+            //builder.setTitle("경고")
+            builder.setMessage("정말 삭제하시겠어요?")
+            builder.setPositiveButton("확인") { _, _ ->
+                val database: GoalDatabase = GoalDatabase.getInstance(applicationContext)
+                val goalDao: GoalDao =database.goalDao
+                Thread{database.goalDao.delete(goal_id)}.start()
+                Delete()
+                var intent=Intent(this,MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivityForResult(intent,3)
+                overridePendingTransition(R.anim.slide_down,R.anim.slide_up)
+            }
+            builder.setNegativeButton("취소") { _, _ ->
+
+            }
+
+            builder.show()
             //goal 테이블에서 목표 delete
-            val database: GoalDatabase = GoalDatabase.getInstance(applicationContext)
+            /*val database: GoalDatabase = GoalDatabase.getInstance(applicationContext)
             val goalDao: GoalDao =database.goalDao
             Thread{database.goalDao.delete(goal_id)}.start()
             Delete()
             var intent=Intent(this,MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivityForResult(intent,3)
+            startActivityForResult(intent,3)*/
         }
 
     }

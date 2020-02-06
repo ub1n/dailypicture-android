@@ -63,57 +63,52 @@
 
     <ImageButton
         android:id="@+id/download_detail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="80dp"
         android:background="#00FAF8F8"
         android:scaleType="centerCrop"
         android:src="@drawable/download"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_image" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/delete_detail"
         android:layout_width="27dp"
         android:layout_height="30dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginBottom="95dp"
         android:layout_weight="1"
-        android:background="@drawable/delete"
 
+        android:background="@drawable/delete"
         android:padding="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.273"
-        app:layout_constraintStart_toEndOf="@+id/download_detail"
-        app:layout_constraintTop_toBottomOf="@+id/detail_image" />
+        app:layout_constraintStart_toEndOf="@+id/download_detail" />
 
     <ImageButton
         android:id="@+id/back_detail"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginBottom="95dp"
         android:background="#00FAF8F8"
         android:padding="7dp"
-        android:src="@drawable/back_3"
         android:scaleType="centerCrop"
+        android:src="@drawable/back_3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/download_detail"
-        app:layout_constraintHorizontal_bias="0.393"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_image"
-        app:layout_constraintVertical_bias="0.504" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="27dp"
         android:text="삭제"
         android:textColor="#3D3B3B"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.615"
         app:layout_constraintStart_toEndOf="@+id/download_detail"
         app:layout_constraintTop_toBottomOf="@+id/delete_detail" />
 
@@ -121,12 +116,11 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="27dp"
         android:text="뒤로"
         android:textColor="#3D3B3B"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/download_detail"
-        app:layout_constraintHorizontal_bias="0.402"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_detail" />
 
@@ -134,7 +128,7 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="13dp"
         android:text="사진 저장"
         android:textColor="#3D3B3B"
         android:textStyle="bold"
