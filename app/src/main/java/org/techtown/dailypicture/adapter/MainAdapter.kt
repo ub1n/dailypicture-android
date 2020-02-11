@@ -61,7 +61,7 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
                     Picasso.get().load(thumbnail).into(goal_imageView)
                     //item 위에 글자쓰기
                     goal_text.setText(item.title)
-                    goal_text2.setText("D+"+item.dayscount.toString())
+                    goal_text2.setText("D+"+item.days_count.toString())
 
 
                 }
@@ -73,7 +73,7 @@ class MainAdapter(context : Context) : RecyclerView.Adapter<MainAdapter.ViewHold
             var intent=Intent(view.context, GoalDetailActivity::class.java)
             intent.putExtra("goal_name",goalList[position].title)
             intent.putExtra("goal_id",goalList[position].id)
-            intent.putExtra("goal_dday",goalList[position].dayscount)
+            intent.putExtra("goal_dday",goalList[position].days_count)
             TokenTon.setpostId(goalList[position].id)
             view.context.startActivity(intent)
         }
